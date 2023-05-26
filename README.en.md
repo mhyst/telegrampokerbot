@@ -1,6 +1,6 @@
 # telegrampokerbot
 
-[![es](https://img.shields.io/badge/lang-es-red.svg)](https://github.com/mhyst/telegrampokerbot/main/README.md)
+[![es](https://img.shields.io/badge/lang-es-red.svg)](https://github.com/mhyst/telegrampokerbot/blob/main/README.md)
 
 ## Mode of use
 
