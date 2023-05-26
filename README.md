@@ -1,4 +1,7 @@
 # telegrampokerbot
+
+[![en](https://img.shields.io/badge/lang-en-blue.svg)](https://github.com/mhyst/telegrampokerbot/main/README.en.md)
+
 ## Modo de uso
 * Clonar el repositorio
 * Crear un bot nuevo con @botfather
