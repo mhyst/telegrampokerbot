@@ -356,12 +356,19 @@ class Jugada:
         if len(self.lastGanadores) == 1:
             ganador = self.lastGanadores[0]
             message += "\n"
-            message += "Ganador: "+ganador.getNombre()+" - Juego: "+self.jugadas[self.lastJuego][1]+" Ganancias: "+str(ganador.getLastGanado())
+            message += rf"Ganador: <b>{ganador.getNombre()}</b> - Juego: <b>{self.jugadas[self.lastJuego][1]}</b> Ganancias: <b>{str(ganador.getLastGanado())}</b>"
             #print("Carta1 del juego:",ganador.lastCarta1,"Carta2 del juego:",ganador.lastCarta2)
         else:
             nombres = [ganador.getNombre() for ganador in self.lastGanadores]
             snombres = ', '.join(nombres)
-            message +="Fue un empate a "+self.jugadas[self.lastJuego][1]+" entre: "+snombres+" se reparten "+str(self.lastBote)
+            message += rf"Fue un empate a <b>{self.jugadas[self.lastJuego][1]}</b> entre: <b>{snombres}</b> se reparten <b>{str(self.lastBote)}</b>"
+
+        # Mostrar tabla de ganancias
+        message += "\n\nGanancias\n\n"
+        for jugador in self.jugadores:
+            message += rf"<b>{jugador.getNombre()}</b>\t<b>{jugador.getFondos()}</b>\n"
+        message += "\n"
+
 
         return message
             
