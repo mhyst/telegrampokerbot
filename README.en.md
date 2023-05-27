@@ -4,12 +4,12 @@
 
 ## Mode of use
 
-** Clone the present repo
-** Make a new bot from scratch with @botfather
-** Get the bot private token and replace it by the word "TOKEN" in configure.py file
-** Execute the bot either with python3 pockerbot.py or with ./pockerbot.py
-** Add the bot to a Telegram group
-** Play
+* Clone the present repo
+* Make a new bot from scratch with @botfather
+* Get the bot private token and replace it by the word "TOKEN" in configure.py file
+* Execute the bot either with python3 pockerbot.py or with ./pockerbot.py
+* Add the bot to a Telegram group
+* Play
 
 ## Game mechanics
 
