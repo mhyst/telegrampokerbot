@@ -510,31 +510,39 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                     if jugador != turno:
                         mensaje = rf"No es tu turno, sino el de <b>{turno.getNombre()}</b>"
                     else:
+                        error = False
                         comando = " ".split(message)
                         if len(comando) < 2:
                             cantidad = jugada.apuestaMinima
                         else:
-                            cantidad = int(comando[1])
-                        
-                        jugada.subirApuesta(jugador, cantidad)
-                        mensaje = rf"<b>{user}</b> sube la apuesta en {str(cantidad)} * "
-                        turno = jugada.nextTurn()
+                            try:
+                                cantidad = int(comando[1])
+                            except:
+                                error = True
+
+                        if error:
+                            mensaje = "Necesitas indicar un número entero para subir la apuesta\n"
+                            mensaje += rf"Inténtalo de nuevo {user}"
+                        else:
+                            jugada.subirApuesta(jugador, cantidad)
+                            mensaje = rf"<b>{user}</b> sube la apuesta en {str(cantidad)} * "
+                            turno = jugada.nextTurn()
 
 
-                        if turno is None:
-                            if jugada.isFinJuego():
-                                mensaje = evaluar()
-                            else:
-                                mensaje = "las apuestas han concluído"
-                                if jugada.rondaApuestas == 1:
-                                    mensaje += " * Se inician los descartes (<i>/sirve /servido</i>)"
-                                    estado = DESCARTES
-                                elif jugada.rondaApuestas == 2:
-                                    estado = RESULTADO
+                            if turno is None:
+                                if jugada.isFinJuego():
                                     mensaje = evaluar()
-                        else:                    
-                            mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b> * "
-                            mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b>"
+                                else:
+                                    mensaje = "las apuestas han concluído"
+                                    if jugada.rondaApuestas == 1:
+                                        mensaje += " * Se inician los descartes (<i>/sirve /servido</i>)"
+                                        estado = DESCARTES
+                                    elif jugada.rondaApuestas == 2:
+                                        estado = RESULTADO
+                                        mensaje = evaluar()
+                            else:                    
+                                mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b> * "
+                                mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b>"
 
 
     await send(update, context, mensaje)
