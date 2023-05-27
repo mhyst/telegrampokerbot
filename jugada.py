@@ -186,7 +186,7 @@ class Jugada:
         self.idTurno += 1
         if self.idTurno == len(jugadores):
             self.idTurno = 0
-        while jugadores[self.idTurno].isNoVoy():
+        while jugadores[self.idTurno].isNovoy():
             self.idTurno += 1
             if self.idTurno == len(jugadores):
                 self.idTurno = 0
@@ -353,8 +353,8 @@ class Jugada:
 
 
     def mostrar2(self):
-        message = "Jugadores\n"
-        message += "---------------------------------------------------------\n"
+        message = "<b><u>Jugadores</u></b>\n\n"
+        #message += "---------------------------------------------------------\n"
         for jugador in self.jugadores:
             message += jugador.mostrar2()
 
@@ -369,9 +369,12 @@ class Jugada:
             message += rf"Fue un empate a <b>{self.jugadas[self.lastJuego][1]}</b> entre: <b>{snombres}</b> se reparten <b>{str(self.lastBote)}</b>"
 
         # Mostrar tabla de ganancias
-        message += "\n\nGanancias\n\n"
+        message += "\n\n<b><u>Ganancias</u></b>\n\n"
+        #message += "---------------\n"
+
         for jugador in self.jugadores:
-            message += rf"<b>{jugador.getNombre()}</b>\t<b>{jugador.getFondos()}</b>\n"
+            message += rf"<b>{jugador.getNombre()}</b> <b>{jugador.getFondos()}</b>"
+            message += "\n"
         message += "\n"
 
 

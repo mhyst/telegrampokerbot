@@ -168,4 +168,4 @@ class Jugador:
     def mostrar2(self):
         #print(self.nombre,self.getCartasOrden())
         cartas = '  '.join(self.getCartasOrden())
-        return ""+self.nombre+" --> "+cartas+"\n"
+        return ""+self.nombre+": "+cartas+"\n"

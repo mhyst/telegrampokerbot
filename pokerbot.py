@@ -34,7 +34,7 @@ de este código.
 import logging
 
 from telegram import __version__ as TG_VER
-from telegram import Chat, ChatMember, ChatMemberUpdated, Update
+from telegram import Chat, ChatMember, ChatMemberUpdated, Update, ForceReply
 from telegram.constants import ParseMode
 
 
@@ -140,6 +140,7 @@ def comandosEstado():
 #
 async def sendToGroup(context, mensaje):
     global chat
+
     await context.bot.send_message(chat_id=chat_id, text=mensaje, parse_mode=ParseMode.HTML)
 
 
@@ -166,7 +167,7 @@ async def open_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     global estado, jugada, chat_id
     if estado != ABRIR:
         comandos = comandosEstado()
-        await send(update, "El juego ya fue abierto * "+comandos)
+        await send(update, context, "El juego ya fue abierto * "+comandos)
         return
 
     """Abrir juego"""
@@ -222,7 +223,7 @@ async def part_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     if estado != PARTICIPAR:
         comandos = comandosEstado()
-        await send(update, "Comando no válido en este estado * "+comandos)
+        await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
     mensaje = ""
@@ -236,7 +237,7 @@ async def part_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         else:
             mensaje = "No estabas jugando"
 
-    await send(update,mensaje)
+    await send(update, context, mensaje)
 
 
 # Manejador: Lista de jugadores
@@ -269,7 +270,7 @@ async def close_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
     if estado != PARTICIPAR:
         comandos = comandosEstado()
-        await send(update, "Comando no válido en este estado * "+comandos)
+        await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
     """Cerramos el juego para que no puedan entrar otros jugadores."""
@@ -313,7 +314,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
     if estado != DESCARTES:
         comandos = comandosEstado()
-        await send(update, "Comando no válido en este estado * "+comandos)
+        await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
     """Servimos cartas al jugador que las pide si aún no ha consumido sus 5 cartas de descarte"""
@@ -371,7 +372,8 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         jugada.rondaApuestas = 2
         turno = jugada.nextTurn()
 
-        mensaje += rf" * Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b>"
+        mensaje += "\n"
+        mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b>"
         await send(update, context, mensaje)
         estado = APUESTAS2
 
@@ -385,7 +387,7 @@ async def served_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     if estado != DESCARTES:
         comandos = comandosEstado()
-        await send(update, "Comando no válido en este estado * "+comandos)
+        await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
     """El jugador se da por servido."""
@@ -414,7 +416,8 @@ async def served_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         jugada.setIdTurn(0)
         jugada.rondaApuestas = 2
         turno = jugada.nextTurn()
-        mensaje += rf" * Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b>"
+        mensaje += "\n"
+        mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b>"
         await send(update, context, mensaje)
         estado = APUESTAS2
 
@@ -428,7 +431,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
     if estado != APUESTAS1 and estado != APUESTAS2:
         comandos = comandosEstado()
-        await send(update, "Comando no válido en este estado * "+comandos)
+        await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
     mensaje = ""
@@ -456,7 +459,8 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                             mensaje = "Aún no hay apuesta inicial"
                         else:
                             jugada.verApuesta(jugador)
-                            mensaje = rf"<b>{user}</b> ve la apuesta * "
+                            mensaje = rf"<b>{user}</b> ve la apuesta"
+                            mensaje += "\n"
                             turno = jugada.nextTurn()
 
                             if turno is None:
@@ -464,14 +468,16 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                                     mensaje = evaluar()
                                 else:
                                     mensaje = "Las apuestas han concluído"
+                                    mensaje += "\n"
                                     if jugada.rondaApuestas == 1:
-                                        mensaje += " * Se inician los descartes (<i>/sirve /servido</i>)"
+                                        mensaje += "Se inician los descartes (<i>/sirve /servido</i>)"
                                         estado = DESCARTES
                                     elif jugada.rondaApuestas == 2:
                                         estado = RESULTADO
                                         mensaje = evaluar()
                             else:
-                                mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b> * "
+                                mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
+                                mensaje += "\n"
                                 mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())}"
 
     await send(update, context, mensaje)
@@ -486,7 +492,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     if estado != APUESTAS1 and estado != APUESTAS2:
         comandos = comandosEstado()
-        await send(update, "Comando no válido en este estado * "+comandos)
+        await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
     """Evaluamos el juego a ver quién ha ganado"""
@@ -511,7 +517,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                         mensaje = rf"No es tu turno, sino el de <b>{turno.getNombre()}</b>"
                     else:
                         error = False
-                        comando = " ".split(message)
+                        comando = message.split(" ")
                         if len(comando) < 2:
                             cantidad = jugada.apuestaMinima
                         else:
@@ -525,7 +531,8 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                             mensaje += rf"Inténtalo de nuevo {user}"
                         else:
                             if jugada.subirApuesta(jugador, cantidad):
-                                mensaje = rf"<b>{user}</b> sube la apuesta en {str(cantidad)} * "
+                                mensaje = rf"<b>{user}</b> sube la apuesta en {str(cantidad)}"
+                                mensaje += "\n"
                                 turno = jugada.nextTurn()
 
                                 if turno is None:
@@ -533,14 +540,16 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                         mensaje = evaluar()
                                     else:
                                         mensaje = "las apuestas han concluído"
+                                        mensaje += "\n"
                                         if jugada.rondaApuestas == 1:
-                                            mensaje += " * Se inician los descartes (<i>/sirve /servido</i>)"
+                                            mensaje += "Se inician los descartes (<i>/sirve /servido</i>)"
                                             estado = DESCARTES
                                         elif jugada.rondaApuestas == 2:
                                             estado = RESULTADO
                                             mensaje = evaluar()
                                 else:                    
-                                    mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b> * "
+                                    mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
+                                    mensaje += "\n"
                                     mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b>"
                             else:
                                 mensaje = rf"<b>{user}, no tienes suficientes fondos para cubrir esa apuesta.</b>"
@@ -558,7 +567,7 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     if estado != APUESTAS1 and estado != APUESTAS2:
         comandos = comandosEstado()
-        await send(update, "Comando no válido en este estado * "+comandos)
+        await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
     """Evaluamos el juego a ver quién ha ganado"""
@@ -585,7 +594,8 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                     else:
                         if jugada.rondaApuestas == 1:
                             jugador.setPasado(True)
-                            mensaje = rf"<b>{user}</b> ha pasado * "
+                            mensaje = rf"<b>{user}</b> ha pasado"
+                            mensaje += "\n"
 
                             turno = jugada.nextTurn()
 
@@ -595,14 +605,16 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                     mensaje = evaluar()
                                 else:
                                     mensaje = "las apuestas han concluído"
+                                    mensaje += "\n"
                                     if jugada.rondaApuestas == 1:
-                                        mensaje += " * Se inician los descartes (/sirve /servido)"
+                                        mensaje += "Se inician los descartes (/sirve /servido)"
                                         estado = DESCARTES
                                     elif jugada.rondaApuestas == 2:
                                         estado = RESULTADO
                                         mensaje = evaluar()
                             else:
                                 mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
+                                mensaje += "\n"
                                 mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())}"
 
 
@@ -622,7 +634,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
     if estado != APUESTAS1 and estado != APUESTAS2:
         comandos = comandosEstado()
-        await send(update, "Comando no válido en este estado * "+comandos)
+        await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
     """Evaluamos el juego a ver quién ha ganado"""
@@ -651,7 +663,8 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                         jugador = jugada.getJugador(user)
 
                         jugador.setNovoy(True)
-                        mensaje = rf"<b>{user}</b> ha pasado * "
+                        mensaje = rf"<b>{user}</b> ha pasado"
+                        mensaje += "\n"
                         turno = jugada.nextTurn()
 
                         if turno is None:
@@ -659,14 +672,16 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                                 mensaje = evaluar()
                             else:
                                 mensaje = "las apuestas han concluído"
+                                mensaje += "\n"
                                 if jugada.rondaApuestas == 1:
-                                    mensaje += " * Se inician los descartes (<i>/sirve /servido</i>)"
+                                    mensaje += "Se inician los descartes (<i>/sirve /servido</i>)"
                                     estado = DESCARTES
                                 elif jugada.rondaApuestas == 2:
                                     estado = RESULTADO
                                     mensaje = evaluar()
                         else:
                             mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
+                            mensaje += "\n"
                             mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())}"
 
 
@@ -725,7 +740,7 @@ async def evaluate_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
     if estado != RESULTADO:
         comandos = comandosEstado()
-        await send(update, "Comando no válido en este estado * "+comandos)
+        await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
     """Evaluamos el juego a ver quién ha ganado"""
@@ -762,7 +777,7 @@ async def end_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if estado != PARTICIPAR:
         comandos = comandosEstado()
-        await send(update, "Comando no válido en este estado * "+comandos)
+        await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
     jugada = None
