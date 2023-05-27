@@ -151,10 +151,15 @@ class Jugada:
         self.bote += resto
 
     def subirApuesta(self,jugador,cantidad=5):
-        self.verApuesta(jugador)
-        jugador.aumentarApuesta(cantidad)
-        self.lastApuesta += cantidad
-        self.bote += cantidad
+        cantidadtotal = cantidad + (self.lastApuesta - jugador.getApuesta())
+        if cantidadtotal <= jugador.getFondos():
+            self.verApuesta(jugador)
+            jugador.aumentarApuesta(cantidad)
+            self.lastApuesta += cantidad
+            self.bote += cantidad
+            return True
+        else:
+            return False
 
     def getJugadoresApuestasRestantes(self):
         restantes = []
