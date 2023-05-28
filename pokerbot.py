@@ -254,7 +254,7 @@ async def jugadores_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             mensaje = "Aún no se ha unido ningún jugador"
         else:
             mensaje = "<u><b>Lista de Jugadores</b></u>"
-            mensaje += "\n"
+            mensaje += "\n\n"
             for jugador in jugada.jugadores:
                 mensaje += rf"<b>{jugador.getNombre()}</b>"
                 mensaje += "\n"
@@ -817,35 +817,40 @@ async def end_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def pukit_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # Solo responder a mhyst
     user = update.effective_user.username
+    mensaje = "Nada que objetar"
     if user == "mhyst":
         print(user, update.message.text)
         # Obtén el mensaje del usuario
         message = update.message.text
         # Si el mensaje contiene "pbt"
         if message.startswith("pukit"):
-
-            comando = message.split(". ")
-            match comando[1]:
-                case "addFondos":
-                    if len(comandos) < 4:
-                        mensaje = "Necesita indicar el nombre del jugador y la cantidad a añadir"
-                    else:
-                        jugador = jugada.getJugador(comando[2])
-                        if jugador is None:
-                            mensaje = "Ese jugador no existe"
+            comando = message.split(".")
+            if len(comando) == 1:
+                mensaje = "Espero órdenes"
+            else:
+                parms = comando[1].split(" ")
+                match parms[0]:
+                    case "addFondos":
+                        if len(parms) < 3:
+                            mensaje = "Necesita indicar el nombre del jugador y la cantidad a añadir"
                         else:
-                            error = False
-                            try:
-                                cantidad = int(comando[3])
-                            except:
-                                error = True
-                            if error:
-                                mensaje = "La cantidad debe ser un número entero"
+                            jugador = jugada.getJugador(parms[1])
+                            if jugador is None:
+                                mensaje = "Ese jugador no existe"
                             else:
-                                jugador.addFondos()
+                                error = False
+                                try:
+                                    cantidad = int(parms[2])
+                                except:
+                                    error = True
+                                if error:
+                                    mensaje = "La cantidad debe ser un número entero"
+                                else:
+                                    jugador.addFondos(cantidad)
+                                    mensaje = rf"La cantidad de {cantidad} fue añadida a los fondos de <b>{parms[1]}</b> que ahora cuenta con {jugador.getFondos()}"
 
             # Envía una respuesta al usuario
-            await update.message.reply_html(mensage)
+            await update.message.reply_html(mensaje)
             #await context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
 
@@ -882,7 +887,7 @@ def main() -> None:
     application.add_handler(CommandHandler("cerrar", close_command))
 
     application.add_handler(CommandHandler("jugadores", jugadores_command))
-    application.add_handler(CommandHandler("ganancias", jugadores_command))
+    application.add_handler(CommandHandler("ganancias", ganancias_command))
 
     application.add_handler(CommandHandler("sirve", serve_command))
     application.add_handler(CommandHandler("servido", served_command))
