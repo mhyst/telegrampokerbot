@@ -253,10 +253,33 @@ async def jugadores_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         if len(jugada.jugadores) == 0:
             mensaje = "Aún no se ha unido ningún jugador"
         else:
-            mensaje = "Lista de Jugadores * "
-            mensaje += "<hr> * "
+            mensaje = "<u><b>Lista de Jugadores</b></u>"
+            mensaje += "\n"
             for jugador in jugada.jugadores:
-                mensaje += rf"<b>{jugador.getNombre()}</b> * "
+                mensaje += rf"<b>{jugador.getNombre()}</b>"
+                mensaje += "\n"
+
+    await send(update, context, mensaje)
+
+
+
+# Manejador: Tabla de ganancias
+# -----------------------------
+# Muestra los fondos de cada jugador
+#
+async def ganancias_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    global jugada
+    mensaje = ""
+    if not jugada:
+        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
+    else:
+        if len(jugada.jugadores) == 0:
+            mensaje = "Aún no se ha unido ningún jugador"
+        else:
+            mensaje = "<u><b>Tabla Ganancias</b></u>\n\n"
+            for jugador in jugada.jugadores:
+                mensaje += rf"<b>{jugador.getNombre()}</b> <b>{jugador.getFondos()}</b>"
+                mensaje += "\n"
 
     await send(update, context, mensaje)
 
@@ -801,8 +824,28 @@ async def pukit_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         # Si el mensaje contiene "pbt"
         if message.startswith("pukit"):
 
+            comando = message.split(". ")
+            match comando[1]:
+                case "addFondos":
+                    if len(comandos) < 4:
+                        mensaje = "Necesita indicar el nombre del jugador y la cantidad a añadir"
+                    else:
+                        jugador = jugada.getJugador(comando[2])
+                        if jugador is None:
+                            mensaje = "Ese jugador no existe"
+                        else:
+                            error = False
+                            try:
+                                cantidad = int(comando[3])
+                            except:
+                                error = True
+                            if error:
+                                mensaje = "La cantidad debe ser un número entero"
+                            else:
+                                jugador.addFondos()
+
             # Envía una respuesta al usuario
-            await update.message.reply_html(message)
+            await update.message.reply_html(mensage)
             #await context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
 
@@ -828,7 +871,7 @@ def main() -> None:
     application.add_handler(CommandHandler("ayuda", help_command))
 
     # Crea un manejador de mensajes que responda a los mensajes de texto que contengan "pbt"
-    #application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, pukit_commands))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, pukit_commands))
 
 
     application.add_handler(CommandHandler("abrir", open_command))
@@ -839,6 +882,7 @@ def main() -> None:
     application.add_handler(CommandHandler("cerrar", close_command))
 
     application.add_handler(CommandHandler("jugadores", jugadores_command))
+    application.add_handler(CommandHandler("ganancias", jugadores_command))
 
     application.add_handler(CommandHandler("sirve", serve_command))
     application.add_handler(CommandHandler("servido", served_command))

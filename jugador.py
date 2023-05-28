@@ -82,6 +82,9 @@ class Jugador:
     def setFondos(self, fondos):
         self.fondos = fondos
 
+    def addFondos(self, cantidad):
+        self.fondos += cantidad
+
     def getLastJuego(self):
         return self.lastJuego
 
