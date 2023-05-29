@@ -848,6 +848,23 @@ async def pukit_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                                 else:
                                     jugador.addFondos(cantidad)
                                     mensaje = rf"La cantidad de {cantidad} fue añadida a los fondos de <b>{parms[1]}</b> que ahora cuenta con {jugador.getFondos()}"
+                    case "resetFondos":
+                        if len(parms) > 1:
+                            error = False
+                            try:
+                                cantidad = int(parms[1])
+                            except:
+                                error = True
+                            if error:
+                                mensaje = "La cantidad debe ser un número entero"
+                            else:
+                                for jugador in jugada.jugadores:
+                                    jugador.setFondos(cantidad)
+                                mensaje = rf"Todos los jugadores tienen {cantidad}"
+                        elif len(parms) == 1:
+                            for jugador in jugada.jugadores:
+                                jugador.setFondos(1000)
+                            mensaje = "Todos los jugadores tienen 100"
 
             # Envía una respuesta al usuario
             await update.message.reply_html(mensaje)
