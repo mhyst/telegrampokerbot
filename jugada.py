@@ -62,6 +62,7 @@ class Jugada:
         self.turno = None
         self.idTurno = 0
         self.finJuego = False
+        self.nTurno = 0
 
     def addJugador(self, jugador):
         self.jugadores.append(jugador)
@@ -229,6 +230,7 @@ class Jugada:
         if self.isFinApuesta(jugs):
             turno = None
         else:
+            self.nTurno += 1
             turno = jugs[self.getIdTurn()]
             self.increaseIdTurn(jugs)
         
