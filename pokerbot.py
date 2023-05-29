@@ -393,6 +393,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
         jugada.setIdTurn(0)
         jugada.rondaApuestas = 2
+        jugada.nTurno = 0
         turno = jugada.nextTurn()
 
         mensaje += "\n"
@@ -438,6 +439,7 @@ async def served_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         print("DEBUG - served: estan todos servidos")
         jugada.setIdTurn(0)
         jugada.rondaApuestas = 2
+        jugada.nTurno = 0
         turno = jugada.nextTurn()
         mensaje += "\n"
         mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b>"
@@ -478,7 +480,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                         mensaje = rf"No es tu turno, sino el de <b>{turno.getNombre()}</b>"
                     else:
                         lastApuesta = jugada.lastApuesta
-                        if lastApuesta == 0:
+                        if lastApuesta == 0 or jugada.nTurno == 1:
                             mensaje = "Aún no hay apuesta inicial"
                         else:
                             jugada.verApuesta(jugador)
