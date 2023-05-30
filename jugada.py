@@ -204,7 +204,7 @@ class Jugada:
             self.lastGanadores.append(jugs[0])
             return True
 
-        # breakpoint()
+        #breakpoint()
         if self.lastApuesta == 0:
             finApuesta=False
         elif self.rondaApuestas == 2 and self.lastRonda != self.rondaApuestas:
@@ -212,6 +212,8 @@ class Jugada:
             self.idTurn = 0
             finApuesta=False
         else:
+            if self.nTurno == 1:
+                return False
             for jugador in jugs:
                 print(jugador.getNombre(),jugador.getApuesta())
                 if jugador.getApuesta() < self.lastApuesta:
@@ -220,7 +222,7 @@ class Jugada:
         return finApuesta
 
 
-    def nextTurn(self):
+    def nextTurn(self, noincrement=False):
         turno = None
 
         jugs = [jugador for jugador in self.jugadores if not jugador.isNovoy()]
@@ -230,7 +232,8 @@ class Jugada:
         if self.isFinApuesta(jugs):
             turno = None
         else:
-            self.nTurno += 1
+            if not noincrement:
+                self.nTurno += 1
             turno = jugs[self.getIdTurn()]
             self.increaseIdTurn(jugs)
         
