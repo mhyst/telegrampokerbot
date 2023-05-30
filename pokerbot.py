@@ -688,7 +688,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                         jugador = jugada.getJugador(user)
 
                         jugador.setNovoy(True)
-                        mensaje = rf"<b>{user}</b> ha pasado"
+                        mensaje = rf"<b>{user}</b> se retira"
                         mensaje += "\n"
                         turno = jugada.nextTurn()
 
