@@ -726,7 +726,7 @@ def evaluar():
     if jugada.isFinJuego():
         mensaje = rf"Gana <b>{jugada.lastGanadores[0].getNombre()}</b> por abandono. Gana {str(jugada.bote)}"
         jugada.repartirBote(jugada.lastGanadores)
-        jugada.lastBote = jugada.bote
+        #jugada.lastBote = jugada.bote
         #mensaje += jugada.mostrar2()
     else:
         mensaje = jugada.evaluarResultado()

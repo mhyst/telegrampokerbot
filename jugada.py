@@ -235,6 +235,9 @@ class Jugada:
             if not noincrement:
                 self.nTurno += 1
             turno = jugs[self.getIdTurn()]
+            if turno is None:
+                self.increaseIdTurn(jugs)
+                turno = jugs[self.IdTurn()]
             self.increaseIdTurn(jugs)
         
         self.turno = turno
