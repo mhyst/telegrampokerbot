@@ -138,10 +138,10 @@ def comandosEstado():
 # En el caso de que algunos jugadores estén jugando desde sus ventanas de chat privadas
 # esta función permite suministrar al grupo la información que sea imprescindible.
 #
-async def sendToGroup(context, mensaje):
+async def sendToGroup(nombre, context, mensaje):
     global chat
 
-    await context.bot.send_message(chat_id=chat_id, text=mensaje, parse_mode=ParseMode.HTML)
+    await context.bot.send_message(chat_id=chat_id, text=nombre+": "+mensaje, parse_mode=ParseMode.HTML)
 
 
 
@@ -154,7 +154,7 @@ async def sendToGroup(context, mensaje):
 async def send(update: Update, context, mensaje):
     if update.effective_chat.type == Chat.PRIVATE:
         await update.message.reply_html(mensaje)
-        await sendToGroup(context, mensaje)
+        await sendToGroup(update.effective_user.first_name, context, mensaje)
     else:
         await update.message.reply_html(mensaje)
 
@@ -203,7 +203,7 @@ async def join_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         if jugada.esCompleto() or len(jugada.jugadores) == 5:
             mensaje = "El juego esta completo. Espera al próximo juego"
         else:
-            user = update.effective_user.username
+            user = update.effective_user.first_name
             if jugada.getJugador(user):
                 mensaje = "Ya estabas en el juego"
             else:
@@ -230,7 +230,7 @@ async def part_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     if not jugada:
         mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
     else:
-        user = update.effective_user.username
+        user = update.effective_user.first_name
         jugador = jugada.removeJugadorByNombre(user)
         if jugador:
             mensaje = rf"<b>{user}</b> ha salido del juego"
@@ -351,7 +351,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             if len(jugada.jugadores) == 0:
                 mensaje = "Error. No se añadió ningún jugador."
             else:
-                user = update.effective_user.username
+                user = update.effective_user.first_name
                 message = update.message.text
                 jugador = jugada.getJugador(user)
                 if not jugador:
@@ -425,7 +425,7 @@ async def served_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             if len(jugada.jugadores) == 0:
                 mensaje = "Error. No se añadió ningún jugador."
             else:
-                user = update.effective_user.username
+                user = update.effective_user.first_name
                 message = update.message.text
                 jugador = jugada.getJugador(user)
                 if not jugador:
@@ -469,7 +469,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
             if len(jugada.jugadores) == 0:
                 mensaje = "Error. No se añadió ningún jugador."
             else:
-                user = update.effective_user.username
+                user = update.effective_user.first_name
                 message = update.message.text
                 jugador = jugada.getJugador(user)
                 if not jugador:
@@ -532,7 +532,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             if len(jugada.jugadores) == 0:
                 mensaje = "Error. No se añadió ningún jugador."
             else:
-                user = update.effective_user.username
+                user = update.effective_user.first_name
                 message = update.message.text
                 jugador = jugada.getJugador(user)
                 if not jugador:
@@ -607,7 +607,7 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             if len(jugada.jugadores) == 0:
                 mensaje = "Error. No se añadió ningún jugador."
             else:
-                user = update.effective_user.username
+                user = update.effective_user.first_name
                 message = update.message.text
                 jugador = jugada.getJugador(user)
                 if not jugador:
@@ -675,7 +675,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             if len(jugada.jugadores) == 0:
                 mensaje = "Error. No se añadió ningún jugador."
             else:
-                user = update.effective_user.username
+                user = update.effective_user.first_name
                 message = update.message.text
                 jugador = jugada.getJugador(user)
                 if not jugador:
@@ -685,7 +685,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                     if jugador != turno:
                         mensaje = rf"No es tu turno, sino el de {turno.getNombre()}"
                     else:
-                        user = update.effective_user.username
+                        user = update.effective_user.first_name
                         message = update.message.text
                         jugador = jugada.getJugador(user)
 
