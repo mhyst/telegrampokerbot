@@ -490,6 +490,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
                             if turno is None:
                                 if jugada.isFinJuego():
+                                    estado = RESULTADO
                                     mensaje = evaluar()
                                 else:
                                     mensaje = "Las apuestas han concluído"
@@ -562,6 +563,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
                                 if turno is None:
                                     if jugada.isFinJuego():
+                                        estado = RESULTADO
                                         mensaje = evaluar()
                                     else:
                                         mensaje = "las apuestas han concluído"
@@ -578,7 +580,6 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                     mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b>"
                             else:
                                 mensaje = rf"<b>{user}, no tienes suficientes fondos para cubrir esa apuesta.</b>"
-
 
     await send(update, context, mensaje)
 
@@ -627,6 +628,7 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
                             if turno is None:
                                 if jugada.isFinJuego():
+                                    estado = RESULTADO
                                     mensaje = evaluar()
                                 else:
                                     mensaje = "las apuestas han concluído"
@@ -695,6 +697,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
                         if turno is None:
                             if jugada.isFinJuego():
+                                estado = RESULTADO
                                 mensaje = evaluar()
                             else:
                                 mensaje = "las apuestas han concluído"
@@ -722,7 +725,7 @@ def evaluar():
     global jugada, estado
 
     # Evaluamos el resultado de la jugada
-
+    breakpoint()
     if jugada.isFinJuego():
         mensaje = rf"Gana <b>{jugada.lastGanadores[0].getNombre()}</b> por abandono. Gana {str(jugada.bote)}"
         jugada.repartirBote(jugada.lastGanadores)
@@ -743,6 +746,7 @@ def evaluar():
     for jugador in jugadores:
         j = jugada.addJugadorByNombre(jugador.getNombre())
         j.setChatId(jugador.getChatId())
+        j.setFondos(jugador.getFondos())
     jugada.setCompleto(False)
 
     #Pasamos al estado de participar para que puedan unirse otros jugadores
