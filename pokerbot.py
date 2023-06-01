@@ -290,7 +290,10 @@ async def ganancias_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             mensaje = "Aún no se ha unido ningún jugador"
         else:
             mensaje = "<u><b>Tabla Ganancias</b></u>\n\n"
-            for jugador in jugada.jugadores:
+
+            sjugadores = jugada.jugadores.copy()
+            sjugadores.sort(key=lambda jugador: jugador.apuesta, reverse=True)
+            for jugador in sjugadores:
                 mensaje += rf"<b>{jugador.getNombre()}</b> <b>{jugador.getFondos()}</b>"
                 mensaje += "\n"
 
@@ -569,7 +572,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                             mensaje = "Necesitas indicar un número entero para subir la apuesta\n"
                             mensaje += rf"Inténtalo de nuevo {user}"
                         else:
-                            if cantidad > jugada.getSubidaMaxima():
+                            if cantidad > jugada.getSubidaMaxima() and jugada.getSubidaMaxima() > 0:
                                 mensaje = rf"No puedes subir más de {str(jugada.subidaMaxima)}"
                             else:
                                 if jugada.subirApuesta(jugador, cantidad):

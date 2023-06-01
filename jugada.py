@@ -383,8 +383,10 @@ class Jugada:
         # Mostrar tabla de ganancias
         message += "\n\n<b><u>Ganancias</u></b>\n\n"
         #message += "---------------\n"
-
-        for jugador in self.jugadores:
+        
+        sjugadores = self.jugadores.copy()
+        sjugadores.sort(key=lambda jugador: jugador.apuesta, reverse=True)
+        for jugador in sjugadores:
             message += rf"<b>{jugador.getNombre()}</b> <b>{jugador.getFondos()}</b>"
             message += "\n"
         message += "\n"
