@@ -63,6 +63,7 @@ class Jugada:
         self.idTurno = 0
         self.finJuego = False
         self.nTurno = 0
+        self.subidaMaxima = 0
 
     def addJugador(self, jugador):
         self.jugadores.append(jugador)
@@ -106,6 +107,12 @@ class Jugada:
 
     def toggleCompleto(self):
         self.completo = not self.completo
+
+    def getSubidaMaxima(self):
+        return self.subidaMaxima
+
+    def setSubidaMaxima(self, cantidad):
+        self.subidaMaxima = cantidad
 
     def repartirCartas(self):
         for jugador in self.jugadores:

@@ -178,7 +178,20 @@ async def open_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         mensaje = "El juego no puede abrirse desde un mensaje privado"
     else:
         jugada = Jugada()
-        mensaje = "Juego abierto"
+        comando = update.message.text.split(" ")
+        if len(comando) == 1:
+            mensaje = "Juego abierto"
+        else:
+            error = False
+            try:
+                cantidad = int(comando[1])
+            except:
+                error = True
+            if error:
+                mensaje = "La cantidad máxima de apuesta debe ser un número entero"
+            else:
+                mensaje = "Juego abierto - la apuesta máxima se ajusta a "+str(cantidad)
+                jugada.setSubidaMaxima(cantidad)
         chat_id = update.effective_chat.id
         estado = PARTICIPAR
 
@@ -556,30 +569,33 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                             mensaje = "Necesitas indicar un número entero para subir la apuesta\n"
                             mensaje += rf"Inténtalo de nuevo {user}"
                         else:
-                            if jugada.subirApuesta(jugador, cantidad):
-                                mensaje = rf"<b>{user}</b> sube la apuesta en {str(cantidad)}"
-                                mensaje += "\n"
-                                turno = jugada.nextTurn()
+                            if cantidad > jugada.getSubidaMaxima():
+                                mensaje = rf"No puedes subir más de {str(jugada.subidaMaxima)}"
+                            else:
+                                if jugada.subirApuesta(jugador, cantidad):
+                                    mensaje = rf"<b>{user}</b> sube la apuesta en {str(cantidad)}"
+                                    mensaje += "\n"
+                                    turno = jugada.nextTurn()
 
-                                if turno is None:
-                                    if jugada.isFinJuego():
-                                        estado = RESULTADO
-                                        mensaje = evaluar()
-                                    else:
-                                        mensaje = "las apuestas han concluído"
-                                        mensaje += "\n"
-                                        if jugada.rondaApuestas == 1:
-                                            mensaje += "Se inician los descartes (<i>/sirve /servido</i>)"
-                                            estado = DESCARTES
-                                        elif jugada.rondaApuestas == 2:
+                                    if turno is None:
+                                        if jugada.isFinJuego():
                                             estado = RESULTADO
                                             mensaje = evaluar()
-                                else:                    
-                                    mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
-                                    mensaje += "\n"
-                                    mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b>"
-                            else:
-                                mensaje = rf"<b>{user}, no tienes suficientes fondos para cubrir esa apuesta.</b>"
+                                        else:
+                                            mensaje = "las apuestas han concluído"
+                                            mensaje += "\n"
+                                            if jugada.rondaApuestas == 1:
+                                                mensaje += "Se inician los descartes (<i>/sirve /servido</i>)"
+                                                estado = DESCARTES
+                                            elif jugada.rondaApuestas == 2:
+                                                estado = RESULTADO
+                                                mensaje = evaluar()
+                                    else:                    
+                                        mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
+                                        mensaje += "\n"
+                                        mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b>"
+                                else:
+                                    mensaje = rf"<b>{user}, no tienes suficientes fondos para cubrir esa apuesta.</b>"
 
     await send(update, context, mensaje)
 
