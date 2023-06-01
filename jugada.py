@@ -136,7 +136,7 @@ class Jugada:
     def laCiega(self):
         self.bote=0
         for jugador in self.jugadores:
-            jugador.aumentarApuesta(self.ciega)
+            jugador.setFondos(jugador.getFondos()-2)
             self.bote += self.ciega
 
     def isServida(self):
@@ -152,7 +152,7 @@ class Jugada:
         self.bote += resto
 
     def subirApuesta(self,jugador,cantidad=5):
-        cantidadtotal = cantidad + (self.lastApuesta - jugador.getApuesta())
+        cantidadtotal = (self.lastApuesta - jugador.getApuesta()) + cantidad
         if cantidadtotal <= jugador.getFondos():
             self.verApuesta(jugador)
             jugador.aumentarApuesta(cantidad)
@@ -204,7 +204,6 @@ class Jugada:
             self.lastGanadores.append(jugs[0])
             return True
 
-        #breakpoint()
         if self.lastApuesta == 0:
             finApuesta=False
         elif self.rondaApuestas == 2 and self.lastRonda != self.rondaApuestas:
@@ -227,8 +226,6 @@ class Jugada:
 
         jugs = [jugador for jugador in self.jugadores if not jugador.isNovoy()]
 
-        #breakpoint()
-        
         if self.isFinApuesta(jugs):
             turno = None
         else:

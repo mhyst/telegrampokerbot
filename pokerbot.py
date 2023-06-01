@@ -725,7 +725,6 @@ def evaluar():
     global jugada, estado
 
     # Evaluamos el resultado de la jugada
-    breakpoint()
     if jugada.isFinJuego():
         mensaje = rf"Gana <b>{jugada.lastGanadores[0].getNombre()}</b> por abandono. Gana {str(jugada.bote)}"
         jugada.repartirBote(jugada.lastGanadores)
