@@ -111,6 +111,12 @@ class Jugada:
     def getSubidaMaxima(self):
         return self.subidaMaxima
 
+    # def writeJugadores(self):
+        # file = open("ignorar/jugadores.txt", "w")
+        # file.seek(0)
+        # file.writelines(self.jugadores)
+        # file.close()
+
     def setSubidaMaxima(self, cantidad):
         self.subidaMaxima = cantidad
 
@@ -199,9 +205,6 @@ class Jugada:
             if self.idTurno == len(jugadores):
                 self.idTurno = 0
 
-
-
-
     def isFinApuesta(self, jugs):
         finApuesta=True
 
@@ -258,6 +261,9 @@ class Jugada:
     
         self.lastBote = self.bote
         self.bote = 0
+
+        # Escribimos los jugadores a dico
+        self.writeJugadores()
 
 
     def establecerGanador(self):
@@ -385,7 +391,7 @@ class Jugada:
         #message += "---------------\n"
         
         sjugadores = self.jugadores.copy()
-        sjugadores.sort(key=lambda jugador: jugador.apuesta, reverse=True)
+        sjugadores.sort(key=lambda jugador: jugador.apuesta)
         for jugador in sjugadores:
             message += rf"<b>{jugador.getNombre()}</b> <b>{jugador.getFondos()}</b>"
             message += "\n"

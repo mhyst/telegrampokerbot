@@ -292,7 +292,7 @@ async def ganancias_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             mensaje = "<u><b>Tabla Ganancias</b></u>\n\n"
 
             sjugadores = jugada.jugadores.copy()
-            sjugadores.sort(key=lambda jugador: jugador.apuesta, reverse=True)
+            sjugadores.sort(key=lambda jugador: jugador.apuesta)
             for jugador in sjugadores:
                 mensaje += rf"<b>{jugador.getNombre()}</b> <b>{jugador.getFondos()}</b>"
                 mensaje += "\n"
