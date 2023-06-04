@@ -11,11 +11,9 @@ class Database:
         if not preexisted:
             self.createScheme()
 
-
     @classmethod
     def exists(cls, filename):
         return os.path.exists(filename)
-
 
     def executeUpdate(self, query):
         cur = self.con.cursor()
@@ -32,11 +30,14 @@ class Database:
         cur = self.con.cursor()
         cur.execute("CREATE TABLE jugadores (nombre TEXT primary key, fondos INTEGER)")
 
-
     def existeJugador(self, nombre):
-        query = rf"select * from jugadores where nombre = '{nombre}'"
-        res = self.execute(query)
-        return not (res.fetchone() is None)
+        query = rf"select fondos from jugadores where nombre = '{nombre}'"
+        res = self.execute(query
+        data = res.fetchone()
+        if data is None:
+            return -1
+        else:
+            return data[0]
 
     def insertJugador(self, nombre, fondos):
         query = rf"insert into jugadores values ('{nombre}', {fondos})"

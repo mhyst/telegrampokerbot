@@ -32,6 +32,7 @@ de este código.
 """
 
 import logging
+import os.path
 
 from telegram import __version__ as TG_VER
 from telegram import Chat, ChatMember, ChatMemberUpdated, Update, ForceReply
@@ -57,7 +58,10 @@ from baraja import Baraja
 from jugada import Jugada
 
 # Importamos la configuración
-from configure import token
+if os.path.exists("ignorar/configure.py"):
+    from ignorar.configure import token
+else:
+    from configure import token
 
 # Enable logging
 # Aunque no lo uso, por el momento se queda.
