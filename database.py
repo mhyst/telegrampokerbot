@@ -32,7 +32,7 @@ class Database:
 
     def existeJugador(self, nombre):
         query = rf"select fondos from jugadores where nombre = '{nombre}'"
-        res = self.execute(query
+        res = self.execute(query)
         data = res.fetchone()
         if data is None:
             return -1
@@ -46,7 +46,7 @@ class Database:
     def updateJugador(self, nombre, fondos):
         if self.existeJugador(nombre):
             query = rf"update jugadores set fondos = {fondos} where nombre = '{nombre}'"
-            self.execute(query)
+            self.executeUpdate(query)
             return True
         else:
             return False

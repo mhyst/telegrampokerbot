@@ -1,6 +1,7 @@
 from jugador import Jugador
 from baraja import Baraja
 from juego import Juego
+from database import Database
 import pdb
 
 class Jugada:
@@ -64,6 +65,8 @@ class Jugada:
         self.finJuego = False
         self.nTurno = 0
         self.subidaMaxima = 0
+        self.db = Database("ignorar/jugadores.db")
+
 
     def addJugador(self, jugador):
         self.jugadores.append(jugador)
@@ -73,6 +76,11 @@ class Jugada:
         jugador = Jugador(nombre)
         jugador.setFondos(self.cantidadInicial)
         self.jugadores.append(jugador)
+        fondos = self.db.existeJugador(nombre)
+        if fondos == -1:
+            self.db.insertJugador(nombre, self.cantidadInicial)
+        else:
+            jugador.setFondos(fondos)
         return jugador
     
     def removeJugador(self, jugador):
@@ -111,11 +119,11 @@ class Jugada:
     def getSubidaMaxima(self):
         return self.subidaMaxima
 
-    # def writeJugadores(self):
-        # file = open("ignorar/jugadores.txt", "w")
-        # file.seek(0)
-        # file.writelines(self.jugadores)
-        # file.close()
+    def writeJugadores(self):
+        for jugador in self.jugadores:
+            self.db.updateJugador(jugador.getNombre(), jugador.getFondos())
+           
+
 
     def setSubidaMaxima(self, cantidad):
         self.subidaMaxima = cantidad
