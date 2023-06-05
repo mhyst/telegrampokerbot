@@ -123,8 +123,6 @@ class Jugada:
         for jugador in self.jugadores:
             self.db.updateJugador(jugador.getNombre(), jugador.getFondos())
            
-
-
     def setSubidaMaxima(self, cantidad):
         self.subidaMaxima = cantidad
 
@@ -156,9 +154,18 @@ class Jugada:
 
     def laCiega(self):
         self.bote=0
-        for jugador in self.jugadores:
-            jugador.setFondos(jugador.getFondos()-2)
-            self.bote += self.ciega
+        if len(self.jugadores) == 2:
+            # Asignar una ciega grande al jugador
+            self.jugadores[0].aumentarApuesta(2)
+            self.lastApuesta = 2
+            self.bote = 2
+            self.idTurno = 1
+        else:
+            self.jugadores[0].aumentarApuesta(2)
+            self.jugadores[1].aumentarApuesta(4)
+            self.lastApuesta = 6
+            self.bote = 6
+            self.idTurno = 2
 
     def isServida(self):
         servido = True
@@ -171,6 +178,7 @@ class Jugada:
     def verApuesta(self, jugador):
         resto = jugador.verApuesta(self.lastApuesta)
         self.bote += resto
+        print(rf"{jugador.getNombre()} ve: montante: {self.lastApuesta} apuesta: {jugador.getApuesta()} cantidad: {resto} bote: {self.bote}")
 
     def subirApuesta(self,jugador,cantidad=5):
         cantidadtotal = (self.lastApuesta - jugador.getApuesta()) + cantidad
@@ -179,6 +187,7 @@ class Jugada:
             jugador.aumentarApuesta(cantidad)
             self.lastApuesta += cantidad
             self.bote += cantidad
+            print(rf"{jugador.getNombre()} sube: montante: {self.lastApuesta} apuesta: {jugador.getApuesta()} cantidad: {cantidad} bote:{self.bote}")
             return True
         else:
             return False

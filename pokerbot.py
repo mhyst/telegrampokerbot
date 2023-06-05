@@ -324,20 +324,15 @@ async def close_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         if jugada.esCompleto():
             mensaje = "El juego ya esta completo."
         else:
-            if len(jugada.jugadores) == 0:
-                mensaje = "Para jugar necesitamos algunos jugadores. <i>Únete con /join</i>"
+            if len(jugada.jugadores) < 2:
+                mensaje = "Para jugar necesitamos al menos dos jugadores. <i>Únete con /join</i>"
             else:
-                if len(jugada.jugadores) == 1:
-                    pukito = jugada.addJugadorByNombre("pukit")
-                    pukito.setServido(True)
-                
                 jugada.nuevaBaraja()
                 jugada.repartirCartas()
                 jugada.setCompleto(True)
                 for jugador in jugada.jugadores:
-                    if jugador.getNombre() != "pukit":
-                        tusCartas = '  '.join(jugador.getCartasBonitas())
-                        await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
+                    tusCartas = '  '.join(jugador.getCartasBonitas())
+                    await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
                 mensaje = "El juego está completo * "
 
                 turno = jugada.nextTurn()
@@ -524,7 +519,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                             else:
                                 mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                                 mensaje += "\n"
-                                mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())}"
+                                mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
     await send(update, context, mensaje)
 
@@ -600,7 +595,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                     else:                    
                                         mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                                         mensaje += "\n"
-                                        mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b>"
+                                        mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b> - Bote: {jugada.bote}"
                                 else:
                                     mensaje = rf"<b>{user}, no tienes suficientes fondos para cubrir esa apuesta.</b>"
 
@@ -665,7 +660,7 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                             else:
                                 mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                                 mensaje += "\n"
-                                mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())}"
+                                mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
 
                         else:
@@ -734,7 +729,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                         else:
                             mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                             mensaje += "\n"
-                            mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())}"
+                            mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
 
     await send(update, context, mensaje)
@@ -941,6 +936,7 @@ def main() -> None:
     application.add_handler(CommandHandler("subo", subo_command))
     application.add_handler(CommandHandler("paso", paso_command))
     application.add_handler(CommandHandler("veo", veo_command))
+    application.add_handler(CommandHandler("voy", veo_command))
     application.add_handler(CommandHandler("novoy", novoy_command))
 
     application.add_handler(CommandHandler("terminar", end_command))
