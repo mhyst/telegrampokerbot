@@ -215,7 +215,7 @@ async def join_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     global jugada
     mensaje = ""
     if not jugada:
-        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
+        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando abrir</i>"
     else:
         if jugada.esCompleto() or len(jugada.jugadores) == 5:
             mensaje = "El juego esta completo. Espera al próximo juego"
@@ -245,7 +245,7 @@ async def part_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     mensaje = ""
     if not jugada:
-        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
+        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando abrir</i>"
     else:
         user = update.effective_user.first_name
         jugador = jugada.removeJugadorByNombre(user)
@@ -265,7 +265,7 @@ async def jugadores_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     global jugada
     mensaje = ""
     if not jugada:
-        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
+        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando abrir</i>"
     else:
         if len(jugada.jugadores) == 0:
             mensaje = "Aún no se ha unido ningún jugador"
@@ -288,7 +288,7 @@ async def ganancias_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     global jugada
     mensaje = ""
     if not jugada:
-        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
+        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando abrir</i>"
     else:
         if len(jugada.jugadores) == 0:
             mensaje = "Aún no se ha unido ningún jugador"
@@ -319,13 +319,13 @@ async def close_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     """Cerramos el juego para que no puedan entrar otros jugadores."""
     mensaje = ""
     if jugada == None:
-        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
+        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando abrir</i>"
     else:
         if jugada.esCompleto():
             mensaje = "El juego ya esta completo."
         else:
             if len(jugada.jugadores) < 2:
-                mensaje = "Para jugar necesitamos al menos dos jugadores. <i>Únete con /join</i>"
+                mensaje = "Para jugar necesitamos al menos dos jugadores. <i>Únete con /entro</i>"
             else:
                 jugada.nuevaBaraja()
                 jugada.repartirCartas()
@@ -358,7 +358,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     """Servimos cartas al jugador que las pide si aún no ha consumido sus 5 cartas de descarte"""
     mensaje = ""
     if jugada == None:
-        mensaje = "Aún no se ha abierto el juego. Usa el comando open"
+        mensaje = "Aún no se ha abierto el juego. Usa el comando <i>abrir</i>"
     else:
         if not jugada.esCompleto():
             mensaje = "El juego aún no esta completo. Esperando que se unan más jugadores."
@@ -432,7 +432,7 @@ async def served_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     """El jugador se da por servido."""
     mensaje = ""
     if jugada == None:
-        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
+        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando abrir</i>"
     else:
         if not jugada.esCompleto():
             mensaje = "El juego aún no esta completo. Esperando que se unan más jugadores."
@@ -476,7 +476,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
     mensaje = ""
     if jugada == None:
-        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
+        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando abrir</i>"
     else:
         if not jugada.esCompleto():
             mensaje = "El juego aún no esta completo. Esperando que se unan más jugadores."
@@ -539,7 +539,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     """Evaluamos el juego a ver quién ha ganado"""
     mensaje = ""
     if jugada == None:
-        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
+        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando abrir</i>"
     else:
         if not jugada.esCompleto():
             mensaje = "El juego aún no esta completo. Esperando que se unan más jugadores."
@@ -617,7 +617,7 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     """Evaluamos el juego a ver quién ha ganado"""
     mensaje = ""
     if jugada == None:
-        mensaje = "Aún no se ha abierto el juego. Usa el comando open"
+        mensaje = "Aún no se ha abierto el juego. Usa el comando <i>abrir</i>"
     else:
         if not jugada.esCompleto():
             mensaje = "El juego aún no esta completo. Esperando que se unan más jugadores."
@@ -685,7 +685,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     """Evaluamos el juego a ver quién ha ganado"""
     mensaje = ""
     if jugada == None:
-        mensaje = "Aún no se ha abierto el juego. Usa el comando open"
+        mensaje = "Aún no se ha abierto el juego. Usa el comando <i>abrir</i>"
     else:
         if not jugada.esCompleto():
             mensaje = "El juego aún no esta completo. Esperando que se unan más jugadores."
@@ -793,7 +793,7 @@ async def evaluate_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     """Evaluamos el juego a ver quién ha ganado"""
     mensaje = ""
     if jugada == None:
-        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando open</i>"
+        mensaje = "Aún no se ha abierto el juego. <i>Usa el comando abrir</i>"
     else:
         if not jugada.esCompleto():
             mensaje = "El juego aún no esta completo. Esperando que se unan más jugadores."
