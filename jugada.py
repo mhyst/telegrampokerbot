@@ -176,9 +176,13 @@ class Jugada:
         return servido
 
     def verApuesta(self, jugador):
-        resto = jugador.verApuesta(self.lastApuesta)
-        self.bote += resto
-        print(rf"{jugador.getNombre()} ve: montante: {self.lastApuesta} apuesta: {jugador.getApuesta()} cantidad: {resto} bote: {self.bote}")
+        if self.lastApuesta - jugador.getApuesta() > jugador.getFondos():
+            return False
+        else:
+            resto = jugador.verApuesta(self.lastApuesta)
+            self.bote += resto
+            print(rf"{jugador.getNombre()} ve: montante: {self.lastApuesta} apuesta: {jugador.getApuesta()} cantidad: {resto} bote: {self.bote}")
+            return True
 
     def subirApuesta(self,jugador,cantidad=5):
         cantidadtotal = (self.lastApuesta - jugador.getApuesta()) + cantidad

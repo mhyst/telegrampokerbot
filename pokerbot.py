@@ -56,6 +56,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 from jugador import Jugador
 from baraja import Baraja
 from jugada import Jugada
+from imagecards import ImageCards
 
 # Importamos la configuración
 if os.path.exists("ignorar/configure.py"):
@@ -332,7 +333,10 @@ async def close_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                 jugada.setCompleto(True)
                 for jugador in jugada.jugadores:
                     tusCartas = '  '.join(jugador.getCartasBonitas())
+                    dCartas = jugador.getCartas()
                     await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
+                    ImageCards.paint(jugador.getChatId(),dCartas)
+                    await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(rf"ignorar/cartas_{str(jugador.getChatId())}.png",'rb'))
                 mensaje = "El juego está completo * "
 
                 turno = jugada.nextTurn()
@@ -392,7 +396,11 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                             servido = jugada.servirJugador(jugador,ids)
                             if servido == len(ids):
                                 tusCartas = '  '.join(jugador.getCartasBonitas())
+                                dCartas = jugador.getCartas()
                                 await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
+                                ImageCards.paint(jugador.getChatId(),dCartas)
+                                await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(rf"ignorar/cartas_{str(jugador.getChatId())}.png",'rb'))
+
                                 if jugador.getServicio() == 5:
                                     mensaje = "Se te ha servido. Vuelve a mirar tus cartas * "
                                     mensaje += rf"<b>{user}</b> está servido"
@@ -498,28 +506,30 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                         if lastApuesta == 0 or jugada.nTurno == 1:
                             mensaje = "Aún no hay apuesta inicial"
                         else:
-                            jugada.verApuesta(jugador)
-                            mensaje = rf"<b>{user}</b> ve la apuesta"
-                            mensaje += "\n"
-                            turno = jugada.nextTurn()
+                            if not jugada.verApuesta(jugador):
+                                mensaje = rf"<b>{user}</b> no tienes suficientes fondos para ver la apuesta"
+                            else:
+                                mensaje = rf"<b>{user}</b> ve la apuesta"
+                                mensaje += "\n"
+                                turno = jugada.nextTurn()
 
-                            if turno is None:
-                                if jugada.isFinJuego():
-                                    estado = RESULTADO
-                                    mensaje = evaluar()
-                                else:
-                                    mensaje = "Las apuestas han concluído"
-                                    mensaje += "\n"
-                                    if jugada.rondaApuestas == 1:
-                                        mensaje += "Se inician los descartes (<i>/sirve /servido</i>)"
-                                        estado = DESCARTES
-                                    elif jugada.rondaApuestas == 2:
+                                if turno is None:
+                                    if jugada.isFinJuego():
                                         estado = RESULTADO
                                         mensaje = evaluar()
-                            else:
-                                mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
-                                mensaje += "\n"
-                                mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
+                                    else:
+                                        mensaje = "Las apuestas han concluído"
+                                        mensaje += "\n"
+                                        if jugada.rondaApuestas == 1:
+                                            mensaje += "Se inician los descartes (<i>/sirve /servido</i>)"
+                                            estado = DESCARTES
+                                        elif jugada.rondaApuestas == 2:
+                                            estado = RESULTADO
+                                            mensaje = evaluar()
+                                else:
+                                    mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
+                                    mensaje += "\n"
+                                    mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
     await send(update, context, mensaje)
 
@@ -597,7 +607,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                         mensaje += "\n"
                                         mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b> - Bote: {jugada.bote}"
                                 else:
-                                    mensaje = rf"<b>{user}, no tienes suficientes fondos para cubrir esa apuesta.</b>"
+                                    mensaje = rf"<b>{user}</b>, no tienes suficientes fondos para cubrir esa apuesta."
 
     await send(update, context, mensaje)
 
