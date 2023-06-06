@@ -775,6 +775,7 @@ def evaluar():
         j.setChatId(jugador.getChatId())
         j.setFondos(jugador.getFondos())
     jugada.setCompleto(False)
+    jugada.writeJugadores()
 
     #Pasamos al estado de participar para que puedan unirse otros jugadores
     estado = PARTICIPAR
