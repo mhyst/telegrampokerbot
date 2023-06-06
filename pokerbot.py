@@ -297,7 +297,7 @@ async def ganancias_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             mensaje = "<u><b>Tabla Ganancias</b></u>\n\n"
 
             sjugadores = jugada.jugadores.copy()
-            sjugadores.sort(key=lambda jugador: jugador.apuesta)
+            sorted(sjugadores, key=lambda jugador: jugador.getApuesta())
             for jugador in sjugadores:
                 mensaje += rf"<b>{jugador.getNombre()}</b> <b>{jugador.getFondos()}</b>"
                 mensaje += "\n"
@@ -849,6 +849,7 @@ async def end_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # sólo en el comienzo. Se conserva por si considero añadirla.
 #
 async def pukit_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    global jugada, estado
     # Solo responder a mhyst
     user = update.effective_user.username
     mensaje = "Nada que objetar"
@@ -899,6 +900,9 @@ async def pukit_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                             for jugador in jugada.jugadores:
                                 jugador.setFondos(1000)
                             mensaje = "Todos los jugadores tienen 100"
+                    case "graba":
+                        jugada.writeJugadores()
+                        mensaje = "Fondos grabados"
 
             # Envía una respuesta al usuario
             await update.message.reply_html(mensaje)
