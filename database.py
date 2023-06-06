@@ -51,3 +51,6 @@ class Database:
         else:
             return False
 
+    def close(self):
+        self.con.close()
+
