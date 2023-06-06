@@ -78,6 +78,7 @@ jugada = None
 ABRIR, PARTICIPAR, APUESTAS1, DESCARTES, APUESTAS2, RESULTADO = range(6)
 estado = ABRIR
 chat_id=-1
+admin=""
 
 
 # Manejador: Punto de entrada
@@ -169,7 +170,7 @@ async def send(update: Update, context, mensaje):
 # Abre un juego nuevo
 #
 async def open_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    global estado, jugada, chat_id
+    global estado, jugada, chat_id, admin
     if estado != ABRIR:
         comandos = comandosEstado()
         await send(update, context, "El juego ya fue abierto * "+comandos)
@@ -199,6 +200,7 @@ async def open_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                 jugada.setSubidaMaxima(cantidad)
         chat_id = update.effective_chat.id
         estado = PARTICIPAR
+        admin = update.effective_user.username
 
     await send(update, context, mensaje)
 
@@ -328,21 +330,24 @@ async def close_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             if len(jugada.jugadores) < 2:
                 mensaje = "Para jugar necesitamos al menos dos jugadores. <i>Únete con /entro</i>"
             else:
-                jugada.nuevaBaraja()
-                jugada.repartirCartas()
-                jugada.setCompleto(True)
-                for jugador in jugada.jugadores:
-                    tusCartas = '  '.join(jugador.getCartasBonitas())
-                    dCartas = jugador.getCartas()
-                    await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
-                    ImageCards.paint(jugador.getChatId(),dCartas)
-                    await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(rf"ignorar/cartas_{str(jugador.getChatId())}.png",'rb'))
-                mensaje = "El juego está completo * "
+                if update.effective_user.username != admin:
+                    mensaje = rf"El administrador del juego es {admin}"
+                else:
+                    jugada.nuevaBaraja()
+                    jugada.repartirCartas()
+                    jugada.setCompleto(True)
+                    for jugador in jugada.jugadores:
+                        tusCartas = '  '.join(jugador.getCartasBonitas())
+                        dCartas = jugador.getCartas()
+                        await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
+                        ImageCards.paint(jugador.getChatId(),dCartas)
+                        await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(rf"ignorar/cartas_{str(jugador.getChatId())}.png",'rb'))
+                    mensaje = "El juego está completo * "
 
-                turno = jugada.nextTurn()
-                mensaje += rf"Primera ronda de apuestas. Turno de <b>{turno.getNombre()}</b>"
-                jugada.rondaApuestas = 1
-                estado = APUESTAS1
+                    turno = jugada.nextTurn()
+                    mensaje += rf"Primera ronda de apuestas. Turno de <b>{turno.getNombre()}</b>"
+                    jugada.rondaApuestas = 1
+                    estado = APUESTAS1
 
     await send(update, context, mensaje)
 
@@ -838,10 +843,13 @@ async def end_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await send(update, context, "Comando no válido en este estado * "+comandos)
         return
 
-    jugada = None
-    mensaje = "Juego cerrado"
-    estado = ABRIR
-    await send(update, context, "Juego finalizado")
+    if update.effective_user.username != admin:
+        await send(update, context, rf"El administrador del juego es {admin}")
+    else:
+        jugada = None
+        mensaje = "Juego cerrado"
+        estado = ABRIR
+        await send(update, context, "Juego finalizado")
 
 
 # Manejador: Pukit -  En deshuso
