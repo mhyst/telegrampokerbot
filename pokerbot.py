@@ -168,12 +168,16 @@ async def sendToGroup(nombre, context, mensaje):
 # Determina si estamos en un chat privado o en un grupo y en caso de ser lo primero
 # envía el mensaje también al grupo.
 #
-async def send(update: Update, context, mensaje):
+async def send(update: Update, context, mensaje, reply=True):
     if update.effective_chat.type == Chat.PRIVATE:
         await update.message.reply_html(mensaje)
         await sendToGroup(update.effective_user.first_name, context, mensaje)
     else:
-        await update.message.reply_html(mensaje)
+        if reply:
+            await update.message.reply_html(mensaje)
+        else:
+            await context.bot.send_message(chat_id=update.effective_chat.chat_id, text=mensaje, parse_mode=ParseMode.HTML)
+
 
 
 # Manejador: Abrir juego nuevo
@@ -549,7 +553,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                                     mensaje += "\n"
                                     mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
-    await send(update, context, mensaje)
+    await send(update, context, mensaje, False)
 
 
 # Manejador: Subir Apuesta
@@ -629,7 +633,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                 else:
                                     mensaje = rf"<b>{user}</b>, no tienes suficientes fondos para cubrir esa apuesta."
 
-    await send(update, context, mensaje)
+    await send(update, context, mensaje, False)
 
 
 # Manejador: Jugador Pasa
@@ -699,7 +703,7 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                             mensaje = "No puedes pasar en la segunda ronda de apuestas * "
                             mensaje += "<b>{user}</b>Sigue siendo tu turno"
 
-    await send(update, context, mensaje)
+    await send(update, context, mensaje, False)
 
 
 # Manejador: Jugador No Va
@@ -766,7 +770,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                             mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
 
-    await send(update, context, mensaje)
+    await send(update, context, mensaje, False)
 
 
 # Función de Soporte: Evaluar Juego
