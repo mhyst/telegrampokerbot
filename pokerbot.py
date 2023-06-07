@@ -174,7 +174,7 @@ async def sendToGroup(nombre, context, mensaje, reply=True):
 async def send(update: Update, context, mensaje, reply=True):
     if update.effective_chat.type == Chat.PRIVATE:
         await update.message.reply_html(mensaje)
-        await sendToGroup(update.effective_user.first_name, context, mensaje)
+        await sendToGroup(update.effective_user.first_name, context, mensaje, reply)
     else:
         if reply:
             await update.message.reply_html(mensaje)
