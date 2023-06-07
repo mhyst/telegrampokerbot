@@ -2,6 +2,7 @@ from jugador import Jugador
 from baraja import Baraja
 from juego import Juego
 from database import Database
+from imagecards import ImageCards
 import pdb
 
 class Jugada:

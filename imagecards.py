@@ -83,7 +83,7 @@ class ImageCards:
     @classmethod
     def paintJugadores(cls, jugadores):
         # Cargar la imagen con todas las cartas
-        cartas_image = Image.open("pics/cartas-l2.png")
+        cartas_image = Image.open("pics/cartas-l3.png")
         print(cartas_image.format, cartas_image.size, cartas_image.mode)
 
         # Definir el tamaño de cada carta en la imagen original
@@ -106,7 +106,7 @@ class ImageCards:
 
 
         for idx, jugador in enumerate(jugadores):
-            cartas = cls.convertirCartas(jugador.getCartas())
+            cartas = cls.convertirCartas(jugador.getCartasOrden2())
 
             # Colocar las cartas en el paño verde
             for i, carta in enumerate(cartas):

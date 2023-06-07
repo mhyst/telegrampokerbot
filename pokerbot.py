@@ -533,6 +533,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                                     if jugada.isFinJuego():
                                         estado = RESULTADO
                                         img_filename, mensaje = evaluar()
+                                        await sendPhoto(update, context, img_filename)
                                     else:
                                         mensaje = "Las apuestas han concluído"
                                         mensaje += "\n"
@@ -542,6 +543,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                                         elif jugada.rondaApuestas == 2:
                                             estado = RESULTADO
                                             img_filename, mensaje = evaluar()
+                                            await sendPhoto(update, context, img_filename)
                                 else:
                                     mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                                     mensaje += "\n"
@@ -608,7 +610,8 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                     if turno is None:
                                         if jugada.isFinJuego():
                                             estado = RESULTADO
-                                            mensaje = evaluar()
+                                            img_filename, mensaje = evaluar()
+                                            await sendPhoto(update, context, img_filename)
                                         else:
                                             mensaje = "las apuestas han concluído"
                                             mensaje += "\n"
@@ -617,7 +620,8 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                                 estado = DESCARTES
                                             elif jugada.rondaApuestas == 2:
                                                 estado = RESULTADO
-                                                mensaje = evaluar()
+                                                img_filename, mensaje = evaluar()
+                                                await sendPhoto(update, context, img_filename)
                                     else:                    
                                         mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                                         mensaje += "\n"
@@ -673,7 +677,8 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                             if turno is None:
                                 if jugada.isFinJuego():
                                     estado = RESULTADO
-                                    mensaje = evaluar()
+                                    img_filename, mensaje = evaluar()
+                                    await sendPhoto(update, context, img_filename)
                                 else:
                                     mensaje = "las apuestas han concluído"
                                     mensaje += "\n"
@@ -682,7 +687,8 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                         estado = DESCARTES
                                     elif jugada.rondaApuestas == 2:
                                         estado = RESULTADO
-                                        mensaje = evaluar()
+                                        img_filename, mensaje = evaluar()
+                                        await sendPhoto(update, context, img_filename)
                             else:
                                 mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                                 mensaje += "\n"
@@ -742,7 +748,8 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                         if turno is None:
                             if jugada.isFinJuego():
                                 estado = RESULTADO
-                                mensaje = evaluar()
+                                img_filename, mensaje = evaluar()
+                                await sendPhoto(update, context, img_filename)
                             else:
                                 mensaje = "las apuestas han concluído"
                                 mensaje += "\n"
@@ -751,7 +758,8 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                                     estado = DESCARTES
                                 elif jugada.rondaApuestas == 2:
                                     estado = RESULTADO
-                                    mensaje = evaluar()
+                                    img_filename, mensaje = evaluar()
+                                    await sendPhoto(update, context, img_filename)
                         else:
                             mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                             mensaje += "\n"
@@ -830,6 +838,7 @@ async def evaluate_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
                 mensaje = "Error. No se añadió ningún jugador."
             else:
                 img_filename, mensaje = evaluar()
+                await sendPhoto(update, context, img_filename)
                 # juego, ganadores = jugada.establecerGanador()
                 # mensaje = jugada.mostrar2()
                 # jugadores = jugada.jugadores.copy()

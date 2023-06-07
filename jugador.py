@@ -54,6 +54,30 @@ class Jugador:
         
         return cartas_ordenadas
 
+
+    def getCartasOrden2(self):
+        cartas = self.cartas
+
+        # Definimos el orden de los valores y palos de las cartas
+        valores = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14 }
+
+        # Definimos el orden de los valores y palos de las cartas
+        palos = {'T': 'T', 'D': 'D', 'C': 'C', 'P': 'P'}
+        
+        # Función de ordenamiento personalizada
+        def orden_cartas(carta):
+            valor = valores[carta[:-1]]
+            palo = palos[carta[-1]]
+            return (valor, palo)
+        
+        # Ordenamos las cartas por valor y palo
+        cartas_ordenadas = sorted(cartas, key=orden_cartas)
+        
+        # Construimos las cartas ordenadas con su palo correspondiente
+        cartas_ordenadas = [next(k for k, v in valores.items() if v == valor) + palos[carta[-1]] if valor in valores.values() else carta for carta, valor in zip(cartas_ordenadas, map(lambda carta: valores[carta[:-1]], cartas_ordenadas))]
+        
+        return cartas_ordenadas
+
     def getCartasBonitas(self):
         cartas = self.cartas
 
