@@ -139,6 +139,17 @@ def comandosEstado():
     return rf"Comandos disponibles estado: {s} - {res}"
 
 
+async def sendPhoto(update, context, filename):
+    if len(filename) > 0:
+        await context.bot.send_photo(chat_id=chat_id,photo=open(filename,'rb'))
+        if update.effective_chat.type == Chat.PRIVATE:
+            await context.bot.send_photo(chat_id=update.effective_chat.chat_id,photo=open(filename,'rb'))
+
+        
+
+
+        
+
 # Función de soporte: Enviar Mensaje al Grupo
 # -------------------------------------------
 # En el caso de que algunos jugadores estén jugando desde sus ventanas de chat privadas
@@ -340,8 +351,8 @@ async def close_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                         tusCartas = '  '.join(jugador.getCartasBonitas())
                         dCartas = jugador.getCartas()
                         await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
-                        ImageCards.paint(jugador.getChatId(),dCartas)
-                        await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(rf"ignorar/cartas_{str(jugador.getChatId())}.png",'rb'))
+                        img_filename = ImageCards.paint(jugador.getChatId(),dCartas)
+                        await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(img_filename,'rb'))
                     mensaje = "El juego está completo * "
 
                     turno = jugada.nextTurn()
@@ -403,8 +414,8 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                                 tusCartas = '  '.join(jugador.getCartasBonitas())
                                 dCartas = jugador.getCartas()
                                 await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
-                                ImageCards.paint(jugador.getChatId(),dCartas)
-                                await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(rf"ignorar/cartas_{str(jugador.getChatId())}.png",'rb'))
+                                img_filename = ImageCards.paint(jugador.getChatId(),dCartas)
+                                await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(img_filename,'rb'))
 
                                 if jugador.getServicio() == 5:
                                     mensaje = "Se te ha servido. Vuelve a mirar tus cartas * "
@@ -521,7 +532,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                                 if turno is None:
                                     if jugada.isFinJuego():
                                         estado = RESULTADO
-                                        mensaje = evaluar()
+                                        img_filename, mensaje = evaluar()
                                     else:
                                         mensaje = "Las apuestas han concluído"
                                         mensaje += "\n"
@@ -530,7 +541,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                                             estado = DESCARTES
                                         elif jugada.rondaApuestas == 2:
                                             estado = RESULTADO
-                                            mensaje = evaluar()
+                                            img_filename, mensaje = evaluar()
                                 else:
                                     mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                                     mensaje += "\n"
@@ -763,8 +774,9 @@ def evaluar():
         jugada.repartirBote(jugada.lastGanadores)
         #jugada.lastBote = jugada.bote
         #mensaje += jugada.mostrar2()
+        img_filename = ""
     else:
-        mensaje = jugada.evaluarResultado()
+        img_filename, mensaje = jugada.evaluarResultado()
 
     # Preparamos la siguiente jugada
 
@@ -786,7 +798,7 @@ def evaluar():
     estado = PARTICIPAR
 
     #Devolvemos la cadena con el ganador
-    return mensaje
+    return img_filename, mensaje
 
 
 # Manejador: Evaluar Juego - En deshuso
@@ -817,7 +829,7 @@ async def evaluate_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
             if len(jugada.jugadores) == 0:
                 mensaje = "Error. No se añadió ningún jugador."
             else:
-                mensaje = evaluar()
+                img_filename, mensaje = evaluar()
                 # juego, ganadores = jugada.establecerGanador()
                 # mensaje = jugada.mostrar2()
                 # jugadores = jugada.jugadores.copy()

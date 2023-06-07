@@ -399,6 +399,9 @@ class Jugada:
         for jugador in self.jugadores:
             message += jugador.mostrar2()
 
+        img_filename = ImageCards.paintJugadores(self.jugadores)
+
+
         if len(self.lastGanadores) == 1:
             ganador = self.lastGanadores[0]
             message += "\n"
@@ -421,7 +424,7 @@ class Jugada:
         message += "\n"
 
 
-        return message
+        return img_filename, message
             
 
 
@@ -518,5 +521,5 @@ class Jugada:
     
     def evaluarResultado(self):
         juego, ganadores = self.establecerGanador()
-        mensaje = self.mostrar2()
-        return mensaje
+        img_filename, mensaje = self.mostrar2()
+        return img_filename, mensaje
