@@ -143,7 +143,7 @@ async def sendPhoto(update, context, filename):
     if len(filename) > 0:
         await context.bot.send_photo(chat_id=chat_id,photo=open(filename,'rb'))
         if update.effective_chat.type == Chat.PRIVATE:
-            await context.bot.send_photo(chat_id=update.effective_chat.chat_id,photo=open(filename,'rb'))
+            await context.bot.send_photo(chat_id=update.effective_chat.id,photo=open(filename,'rb'))
 
         
 
@@ -176,7 +176,7 @@ async def send(update: Update, context, mensaje, reply=True):
         if reply:
             await update.message.reply_html(mensaje)
         else:
-            await context.bot.send_message(chat_id=update.effective_chat.chat_id, text=mensaje, parse_mode=ParseMode.HTML)
+            await context.bot.send_message(chat_id=update.effective_chat.id, text=mensaje, parse_mode=ParseMode.HTML)
 
 
 
