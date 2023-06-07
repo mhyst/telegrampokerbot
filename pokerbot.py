@@ -139,6 +139,12 @@ def comandosEstado():
     return rf"Comandos disponibles estado: {s} - {res}"
 
 
+# Función de soporte: Envíar una foto privada o al grupo
+# ------------------------------------------------------
+# Si filename es cadena vacía no se hace nada
+# Se envía la foto al grupo y si el update procede de un privado, se envía también
+# por privado.
+#
 async def sendPhoto(update, context, filename):
     if len(filename) > 0:
         await context.bot.send_photo(chat_id=chat_id,photo=open(filename,'rb'))
@@ -146,20 +152,17 @@ async def sendPhoto(update, context, filename):
             await context.bot.send_photo(chat_id=update.effective_chat.id,photo=open(filename,'rb'))
 
         
-
-
-        
-
 # Función de soporte: Enviar Mensaje al Grupo
 # -------------------------------------------
 # En el caso de que algunos jugadores estén jugando desde sus ventanas de chat privadas
 # esta función permite suministrar al grupo la información que sea imprescindible.
 #
-async def sendToGroup(nombre, context, mensaje):
-    global chat
-
-    await context.bot.send_message(chat_id=chat_id, text=nombre+": "+mensaje, parse_mode=ParseMode.HTML)
-
+async def sendToGroup(nombre, context, mensaje, reply=True):
+    if reply:
+        str = rf"{mensaje}: "+mensaje
+    else:
+        str = mensaje
+    await context.bot.send_message(chat_id=chat_id, text=str, parse_mode=ParseMode.HTML)
 
 
 # Función de soporte: Enviar
