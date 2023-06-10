@@ -773,7 +773,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                             mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
 
-    await send(update, context, mensajee, False)
+    await send(update, context, mensaje, False)
 
 
 # Función de Soporte: Evaluar Juego
