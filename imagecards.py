@@ -32,12 +32,12 @@ class ImageCards:
         cartas = cls.convertirCartas(cartas)
         # Cargar la imagen con todas las cartas
         cartas_image = Image.open("pics/cartas-l1.png")
-        print(cartas_image.format, cartas_image.size, cartas_image.mode)
+        # print(cartas_image.format, cartas_image.size, cartas_image.mode)
 
         # Definir el tamaño de cada carta en la imagen original
         carta_width = cartas_image.width // 13  # Suponiendo 13 cartas por palo
         carta_height = cartas_image.height // 5  # Suponiendo 5 filas (4 palos + reverso)
-        print(rf"carta_width: {carta_width} carta_height: {carta_height}")
+        # print(rf"carta_width: {carta_width} carta_height: {carta_height}")
 
         # Definir el espacio entre cada carta y alrededor
         espacio_entre_cartas = 20
@@ -47,7 +47,7 @@ class ImageCards:
         pano_width = carta_width * 5 + espacio_entre_cartas * 4 + espacio_alrededor * 2
         pano_height = carta_height + espacio_alrededor * 2
         pano_image = Image.new("RGB", (pano_width, pano_height), "green")
-        print(rf"pano_width: {pano_width} pano_height: {pano_height}")
+        # print(rf"pano_width: {pano_width} pano_height: {pano_height}")
 
 
         # Colocar las cartas en el paño verde
@@ -68,7 +68,7 @@ class ImageCards:
             # Calcular las coordenadas de la carta en el paño verde
             carta_x_pano = i * (carta_width + espacio_entre_cartas) + espacio_alrededor
             carta_y_pano = 50
-            print(rf"carta_x_pano: {carta_x_pano} carta_y_pano: {carta_y_pano}")
+            # print(rf"carta_x_pano: {carta_x_pano} carta_y_pano: {carta_y_pano}")
 
             # Pegar la carta recortada en el paño verde
             pano_image.paste(carta_recortada, (carta_x_pano, carta_y_pano))
@@ -84,12 +84,12 @@ class ImageCards:
     def paintJugadores(cls, jugadores):
         # Cargar la imagen con todas las cartas
         cartas_image = Image.open("pics/cartas-l2.png")
-        print(cartas_image.format, cartas_image.size, cartas_image.mode)
+        # print(cartas_image.format, cartas_image.size, cartas_image.mode)
 
         # Definir el tamaño de cada carta en la imagen original
         carta_width = cartas_image.width // 13  # Suponiendo 13 cartas por palo
         carta_height = cartas_image.height // 5  # Suponiendo 5 filas (4 palos + reverso)
-        print(rf"carta_width: {carta_width} carta_height: {carta_height}")
+        # print(rf"carta_width: {carta_width} carta_height: {carta_height}")
 
         # Definir el espacio entre cada carta y alrededor
         espacio_entre_cartas = 20
@@ -99,7 +99,7 @@ class ImageCards:
         pano_width = carta_width * 5 + espacio_entre_cartas * 4 + espacio_alrededor * 2
         pano_height = len(jugadores) * (carta_height + espacio_alrededor) + espacio_alrededor
         pano_image = Image.new("RGB", (pano_width, pano_height), "green")
-        print(rf"pano_width: {pano_width} pano_height: {pano_height}")
+        # print(rf"pano_width: {pano_width} pano_height: {pano_height}")
         draw = ImageDraw.Draw(pano_image)
         font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-R.ttf", 24)
         #font.set_variation_by_name('Bold')
@@ -126,7 +126,7 @@ class ImageCards:
                 # Calcular las coordenadas de la carta en el paño verde
                 carta_x_pano = i * (carta_width + espacio_entre_cartas) + espacio_alrededor
                 carta_y_pano = 60+idx*(carta_height+60)
-                print(rf"carta_x_pano: {carta_x_pano} carta_y_pano: {carta_y_pano}")
+                # print(rf"carta_x_pano: {carta_x_pano} carta_y_pano: {carta_y_pano}")
 
                 draw.text((50,60+idx*(carta_height+60)-40),jugador.getNombre(),font=font)
 
