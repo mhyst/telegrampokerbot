@@ -158,7 +158,7 @@ async def sendPhoto(update, context, filename):
 # esta función permite suministrar al grupo la información que sea imprescindible.
 #
 async def sendToGroup(nombre, context, mensaje, reply=True):
-    if reply:
+    if reply or estado != RESULTADO:
         str = rf"{nombre}: "+mensaje
     else:
         str = mensaje
@@ -556,7 +556,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                                     mensaje += "\n"
                                     mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
-    await send(update, context, mensaje)
+    await send(update, context, mensaje, False)
 
 
 # Manejador: Subir Apuesta
@@ -636,7 +636,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                 else:
                                     mensaje = rf"<b>{user}</b>, no tienes suficientes fondos para cubrir esa apuesta."
 
-    await send(update, context, mensaje)
+    await send(update, context, mensaje, False)
 
 
 # Manejador: Jugador Pasa
@@ -706,7 +706,7 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                             mensaje = "No puedes pasar en la segunda ronda de apuestas\n"
                             mensaje += "<b>{user}</b>Sigue siendo tu turno"
 
-    await send(update, context, mensaje)
+    await send(update, context, mensaje, False)
 
 
 # Manejador: Jugador No Va
@@ -773,7 +773,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                             mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
 
-    await send(update, context, mensajee)
+    await send(update, context, mensajee, False)
 
 
 # Función de Soporte: Evaluar Juego
