@@ -16,9 +16,9 @@ de partida para este bot. La URL original es la que sigue:
 https://github.com/python-telegram-bot/python-telegram-bot/blob/master/examples/echobot.py
 
 Los documentos de ayuda de la bibliteca Python Telegram Bot me ayudaron a dar los primeros
-pasos, en un ambiente al que nunca me había asomado, y a rellenar los huecos 
+pasos, en un ambiente al que nunca me había asomado, y a rellenar los huecos.
 
-Un algoritmo básico que determinaba el juego de un jugador, proporcionado por CgatGPT.
+Un algoritmo básico que determinaba el juego de un jugador, proporcionado por ChatGPT.
 
 Este algoritmo, ligeramente alterado puede encontrarse en Jugada.mejorJugada.
 
@@ -159,7 +159,7 @@ async def sendPhoto(update, context, filename):
 #
 async def sendToGroup(nombre, context, mensaje, reply=True):
     if reply:
-        str = rf"{mensaje}: "+mensaje
+        str = rf"{nombre}: "+mensaje
     else:
         str = mensaje
     await context.bot.send_message(chat_id=chat_id, text=str, parse_mode=ParseMode.HTML)
@@ -360,7 +360,7 @@ async def close_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                         await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
                         img_filename = ImageCards.paint(jugador.getChatId(),dCartas)
                         await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(img_filename,'rb'))
-                    mensaje = "El juego está completo * "
+                    mensaje = "El juego está completo\n"
 
                     turno = jugada.nextTurn()
                     mensaje += rf"Primera ronda de apuestas. Turno de <b>{turno.getNombre()}</b>"
@@ -425,7 +425,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                                 await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(img_filename,'rb'))
 
                                 if jugador.getServicio() == 5:
-                                    mensaje = "Se te ha servido. Vuelve a mirar tus cartas * "
+                                    mensaje = "Se te ha servido. Vuelve a mirar tus cartas\n"
                                     mensaje += rf"<b>{user}</b> está servido"
                                 else:
                                     mensaje = "Se te ha servido. Vuelve a mirar tus cartas"
@@ -556,7 +556,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                                     mensaje += "\n"
                                     mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
-    await send(update, context, mensaje, False)
+    await send(update, context, mensaje)
 
 
 # Manejador: Subir Apuesta
@@ -636,7 +636,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                 else:
                                     mensaje = rf"<b>{user}</b>, no tienes suficientes fondos para cubrir esa apuesta."
 
-    await send(update, context, mensaje, False)
+    await send(update, context, mensaje)
 
 
 # Manejador: Jugador Pasa
@@ -703,10 +703,10 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 
                         else:
-                            mensaje = "No puedes pasar en la segunda ronda de apuestas * "
+                            mensaje = "No puedes pasar en la segunda ronda de apuestas\n"
                             mensaje += "<b>{user}</b>Sigue siendo tu turno"
 
-    await send(update, context, mensaje, False)
+    await send(update, context, mensaje)
 
 
 # Manejador: Jugador No Va
@@ -773,7 +773,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                             mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
 
 
-    await send(update, context, mensaje, False)
+    await send(update, context, mensajee)
 
 
 # Función de Soporte: Evaluar Juego
