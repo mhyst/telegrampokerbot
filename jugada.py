@@ -92,6 +92,16 @@ class Jugada:
         for index, jugador in enumerate(self.jugadores):
             if jugador.nombre == nombre:
                 j = self.jugadores.pop(index)
+                break
+        return j
+
+
+    def removeJugadorByUsername(self, nombre):
+        j = None
+        for index, jugador in enumerate(self.jugadores):
+            if jugador.username == username:
+                j = self.jugadores.pop(index)
+                break
         return j
 
     def getJugador(self, nombre):
@@ -99,6 +109,7 @@ class Jugada:
         for jugador in self.jugadores:
             if jugador.nombre == nombre:
                 j = jugador
+                break
         return j
 
     def getJugadorByUsername(self, username):
@@ -106,6 +117,7 @@ class Jugada:
         for jugador in self.jugadores:
             if jugador.username == username:
                 j = jugador
+                break
         return j
 
     def estaJugando(self, nombre):
