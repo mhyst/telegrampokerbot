@@ -96,7 +96,7 @@ class Jugada:
         return j
 
 
-    def removeJugadorByUsername(self, nombre):
+    def removeJugadorByUsername(self, username):
         j = None
         for index, jugador in enumerate(self.jugadores):
             if jugador.username == username:
