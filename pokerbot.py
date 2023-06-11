@@ -921,6 +921,24 @@ async def pukit_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                                 else:
                                     jugador.addFondos(cantidad)
                                     mensaje = rf"La cantidad de {cantidad} fue añadida a los fondos de <b>{parms[1]}</b> que ahora cuenta con {jugador.getFondos()}"
+                    case "addFondos2":
+                        if len(parms) < 3:
+                            mensaje = "Necesita indicar el nombre del jugador y la cantidad a añadir"
+                        else:
+                            jugador = jugada.getJugadorByUsername(parms[1])
+                            if jugador is None:
+                                mensaje = "Ese jugador no existe"
+                            else:
+                                error = False
+                                try:
+                                    cantidad = int(parms[2])
+                                except:
+                                    error = True
+                                if error:
+                                    mensaje = "La cantidad debe ser un número entero"
+                                else:
+                                    jugador.addFondos(cantidad)
+                                    mensaje = rf"La cantidad de {cantidad} fue añadida a los fondos de <b>{parms[1]}</b> que ahora cuenta con {jugador.getFondos()}"
                     case "resetFondos":
                         if len(parms) > 1:
                             error = False

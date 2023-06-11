@@ -101,6 +101,13 @@ class Jugada:
                 j = jugador
         return j
 
+    def getJugadorByUsername(self, username):
+        j = None
+        for jugador in self.jugadores:
+            if jugador.username == username:
+                j = jugador
+        return j
+
     def estaJugando(self, nombre):
         nombres = [jugador.nombre for jugador in jugadores]
         return nombre in set(nombres)
