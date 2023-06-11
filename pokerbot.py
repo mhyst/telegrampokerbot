@@ -940,6 +940,26 @@ async def pukit_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                     case "graba":
                         jugada.writeJugadores()
                         mensaje = "Fondos grabados"
+                    case "removePlayer":
+                        if len(parms) > 1:
+                            nombre = parms[1]
+                            jugador = jugada.removeJugadorByNombre(nombre)
+                            if jugador is None:
+                                mensaje = rf"El jugador <b>{nombre}</b> no existe."
+                            else:
+                                jugs = jugada.jugadores.copy()
+                                jugada = Jugada()
+                                for jugador in jugs:
+                                    j = jugada.addJugadorByNombre(jugador.getNombre())
+                                    j.setChatId(jugador.getChatId())
+                                    j.setFondos(jugador.getFondos())
+                                
+                                jugada.setCompleto(False)
+                                estado = PARTICIPAR
+                                mensaje = rf"Jugador <b>{nombre}</b> eliminado. Partida reiniciada. Use el comando <i>/cerrar</i> para otra ronda."
+                        else:
+                            mensaje = "Para eliminar un jugador debes indicar su nombre completo."
+
 
             # Envía una respuesta al usuario
             await update.message.reply_html(mensaje)
