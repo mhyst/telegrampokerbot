@@ -983,7 +983,7 @@ async def pukit_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                             username = parms[1]
                             jugador = jugada.removeJugadorByUsername(username)
                             if jugador is None:
-                                mensaje = rf"El jugador <b>{nombre}</b> no existe."
+                                mensaje = rf"El jugador <b>{username}</b> no existe."
                             else:
                                 jugs = jugada.jugadores.copy()
                                 jugada = Jugada()
@@ -994,7 +994,7 @@ async def pukit_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                                 
                                 jugada.setCompleto(False)
                                 estado = PARTICIPAR
-                                mensaje = rf"Jugador <b>{nombre}</b> eliminado. Partida reiniciada. Use el comando <i>/cerrar</i> para otra ronda."
+                                mensaje = rf"Jugador <b>{username}</b> eliminado. Partida reiniciada. Use el comando <i>/cerrar</i> para otra ronda."
                         else:
                             mensaje = "Para eliminar un jugador debes indicar su nombre completo."
 
