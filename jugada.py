@@ -73,13 +73,13 @@ class Jugada:
         self.jugadores.append(jugador)
 
 
-    def addJugadorByNombre(self, nombre):
+    def addJugadorByNombre(self, nombre, username=""):
         jugador = Jugador(nombre)
         jugador.setFondos(self.cantidadInicial)
         self.jugadores.append(jugador)
         fondos = self.db.existeJugador(nombre)
         if fondos == -1:
-            self.db.insertJugador(nombre, self.cantidadInicial)
+            self.db.insertJugador(nombre, self.cantidadInicial, username)
         else:
             jugador.setFondos(fondos)
         return jugador

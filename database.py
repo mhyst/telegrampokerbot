@@ -28,7 +28,7 @@ class Database:
 
     def createScheme(self):
         cur = self.con.cursor()
-        cur.execute("CREATE TABLE jugadores (nombre TEXT primary key, fondos INTEGER)")
+        cur.execute("CREATE TABLE jugadores (nombre TEXT primary key, fondos INTEGER, cartera INTEGER, username TEXT)")
 
     def existeJugador(self, nombre):
         query = rf"select fondos from jugadores where nombre = '{nombre}'"
@@ -39,13 +39,29 @@ class Database:
         else:
             return data[0]
 
-    def insertJugador(self, nombre, fondos):
-        query = rf"insert into jugadores values ('{nombre}', {fondos})"
+    def insertJugador(self, nombre, fondos, username=""):
+        query = rf"insert into jugadores values ('{nombre}', {fondos}, 0, '{username}')"
         res = self.executeUpdate(query)
 
     def updateJugador(self, nombre, fondos):
         if self.existeJugador(nombre):
             query = rf"update jugadores set fondos = {fondos} where nombre = '{nombre}'"
+            self.executeUpdate(query)
+            return True
+        else:
+            return False
+
+    def updateJugadorCartera(self, nombre, cartera):
+        if self.existeJugador(nombre):
+            query = rf"update jugadores set cartera = {cartera} where nombre = '{nombre}'"
+            self.executeUpdate(query)
+            return True
+        else:
+            return False
+
+    def updateJugadorAll(self, nombre, fondos, cartera):
+        if self.existeJugador(nombre):
+            query = rf"update jugadores set fondos = {fondos}, cartera = {cartera} where nombre = '{nombre}'"
             self.executeUpdate(query)
             return True
         else:

@@ -242,10 +242,11 @@ async def join_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             mensaje = "El juego esta completo. Espera al próximo juego"
         else:
             user = update.effective_user.first_name
+            username = update.effective_user.username
             if jugada.getJugador(user):
                 mensaje = "Ya estabas en el juego"
             else:
-                jugador = jugada.addJugadorByNombre(user)
+                jugador = jugada.addJugadorByNombre(user, username)
                 jugador.setChatId(update.effective_user.id)
                 mensaje = rf"<b>{user}</b> se ha unido al juego"
 
@@ -803,7 +804,7 @@ def evaluar():
     #Empezamos con jugada y baraja nueva
     jugada = Jugada()
     for jugador in jugadores:
-        j = jugada.addJugadorByNombre(jugador.getNombre())
+        j = jugada.addJugadorByNombre(jugador.getNombre(), jugador.getUsername())
         j.setChatId(jugador.getChatId())
         j.setFondos(jugador.getFondos())
     jugada.setCompleto(False)
@@ -950,7 +951,7 @@ async def pukit_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                                 jugs = jugada.jugadores.copy()
                                 jugada = Jugada()
                                 for jugador in jugs:
-                                    j = jugada.addJugadorByNombre(jugador.getNombre())
+                                    j = jugada.addJugadorByNombre(jugador.getNombre(), jugador.getUsername())
                                     j.setChatId(jugador.getChatId())
                                     j.setFondos(jugador.getFondos())
                                 

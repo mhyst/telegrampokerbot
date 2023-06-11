@@ -1,7 +1,7 @@
 from juego import Juego
 
 class Jugador:
-    def __init__(self, nombre, chat_id=-1, cartas=[]):
+    def __init__(self, nombre, chat_id=-1, cartas=[], username=""):
         self.nombre = nombre
         self.cartas = cartas
         self.apuesta = 0
@@ -14,10 +14,17 @@ class Jugador:
         self.pasado = False
         self.miTurno = False
         self.lastGanado = 0
+        self.username = username
 
 
     def getNombre(self):
         return self.nombre
+
+    def getUsername(self):
+        return self.username
+
+    def setUsername(self, username):
+        self.username = username
 
     def getChatId(self):
         return self.chat_id
