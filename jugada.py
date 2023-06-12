@@ -77,11 +77,12 @@ class Jugada:
         jugador = Jugador(nombre, username=username)
         jugador.setFondos(self.cantidadInicial)
         self.jugadores.append(jugador)
-        fondos = self.db.existeJugador(nombre)
+        fondos, cartera = self.db.existeJugador(nombre)
         if fondos == -1:
             self.db.insertJugador(nombre, self.cantidadInicial, username)
         else:
             jugador.setFondos(fondos)
+            jugador.setCartera(cartera)
         return jugador
     
     def removeJugador(self, jugador):

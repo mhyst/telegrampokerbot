@@ -6,6 +6,7 @@ class Jugador:
         self.cartas = cartas
         self.apuesta = 0
         self.fondos = 1000
+        self.cartera = 0
         self.lastJuego = None
         self.chat_id = chat_id
         self.servicio = 0
@@ -115,6 +116,12 @@ class Jugador:
 
     def addFondos(self, cantidad):
         self.fondos += cantidad
+
+    def getCartera(self):
+        return self.cartera
+
+    def setCartera(self, cartera):
+        self.cartera = cartera
 
     def getLastJuego(self):
         return self.lastJuego

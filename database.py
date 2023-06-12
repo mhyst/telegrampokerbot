@@ -31,13 +31,13 @@ class Database:
         cur.execute("CREATE TABLE jugadores (nombre TEXT primary key, fondos INTEGER, cartera INTEGER, username TEXT)")
 
     def existeJugador(self, nombre):
-        query = rf"select fondos from jugadores where nombre = '{nombre}'"
+        query = rf"select fondos, cartera from jugadores where nombre = '{nombre}'"
         res = self.execute(query)
         data = res.fetchone()
         if data is None:
-            return -1
+            return -1, 0
         else:
-            return data[0]
+            return data[0], data[1]
 
     def insertJugador(self, nombre, fondos, username=""):
         query = rf"insert into jugadores values ('{nombre}', {fondos}, 0, '{username}')"
