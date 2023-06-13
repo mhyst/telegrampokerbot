@@ -845,12 +845,11 @@ async def guardar_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 if jugador.fondos >= cantidad:
                     jugador.fondos -= cantidad
                     jugador.cartera += cantidad
-                    mensaje = rf"{user} has añadido {cantidad} a su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
+                    mensaje = rf"<b>{user}</b> ha añadido {cantidad} a su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
                 else:
-                    mensaje = rd"{user}, no tiene suficientes fondos para guardar esa cantidad en su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
+                    mensaje = rf"<b>{user}</b>, no tiene suficientes fondos para guardar esa cantidad en su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
 
     await send(update, context, mensaje)
-
 
 
 # Manejador: Sacar dinero de la cartera
@@ -882,11 +881,30 @@ async def retirar_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 if jugador.cartera >= cantidad:
                     jugador.cartera -= cantidad
                     jugador.fondos += cantidad
-                    mensaje = rf"{user} ha retirado {cantidad} de su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
+                    mensaje = rf"<b>{user}</b> ha retirado {cantidad} de su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
                 else:
-                    mensaje = rd"{user}, no tiene suficientes fondos para guardar esa cantidad en su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
+                    mensaje = rf"<b>{user}</b>, no tiene suficientes fondos para guardar esa cantidad en su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
 
     await send(update, context, mensaje)
+
+
+# Manejador: Mostrar dinero de la cartera
+# ---------------------------------------
+# Retira una parte de los fondos del jugador y se almacenan en la cartera
+#
+async def cartera_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    global jugada
+
+    user = update.effective_user.first_name
+    message = update.message.text
+    jugador = jugada.getJugador(user)
+    if not jugador:
+        mensaje = rf"Error: El jugador <b>{user}</b> no está jugando."
+    else:
+        mensaje = rf"<b>{user}</b> Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
+
+    await send(update, context, mensaje)
+
 
 # Manejador: Evaluar Juego - En deshuso
 # -------------------------------------
@@ -1112,7 +1130,7 @@ def main() -> None:
 
     application.add_handler(CommandHandler("guardar", guardar_command))
     application.add_handler(CommandHandler("retirar", retirar_command))
-
+    application.add_handler(CommandHandler("cartera", cartera_command))
 
     application.add_handler(CommandHandler("sirve", serve_command))
     application.add_handler(CommandHandler("servido", served_command))
