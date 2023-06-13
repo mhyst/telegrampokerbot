@@ -43,9 +43,9 @@ class Database:
         query = rf"insert into jugadores values ('{nombre}', {fondos}, 0, '{username}')"
         res = self.executeUpdate(query)
 
-    def updateJugador(self, nombre, fondos):
+    def updateJugador(self, nombre, fondos, cartera):
         if self.existeJugador(nombre):
-            query = rf"update jugadores set fondos = {fondos} where nombre = '{nombre}'"
+            query = rf"update jugadores set fondos = {fondos}, cartera = {cartera} where nombre = '{nombre}'"
             self.executeUpdate(query)
             return True
         else:

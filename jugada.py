@@ -143,7 +143,7 @@ class Jugada:
     def writeJugadores(self):
         mydb = Database("ignorar/jugadores.db")
         for jugador in self.jugadores:
-            mydb.updateJugador(jugador.getNombre(), jugador.getFondos())
+            mydb.updateJugador(jugador.getNombre(), jugador.getFondos(), jugagor.getCartera())
         mydb.close()
            
     def setSubidaMaxima(self, cantidad):

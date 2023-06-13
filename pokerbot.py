@@ -816,6 +816,77 @@ def evaluar():
     #Devolvemos la cadena con el ganador
     return img_filename, mensaje
 
+# Manejador: Añadir dinero a la cartera
+# -------------------------------------
+# Retira una parte de los fondos del jugador y se almacenan en la cartera
+#
+async def guardar_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    global jugada
+
+    user = update.effective_user.first_name
+    message = update.message.text
+    jugador = jugada.getJugador(user)
+    if not jugador:
+        mensaje = rf"Error: El jugador <b>{user}</b> no está jugando."
+    else:
+        comando = message.split(" ")
+        if len(comando) < 2:
+            mensaje = "Debe indicar la cantidad que quiere guardar en la cartera"
+        else:
+            error = False
+            try:
+                cantidad = int(comando[1])
+            except:
+                error = True
+
+            if error:
+                mensaje = "Necesita indicar un número entero\n"
+            else:
+                if jugador.fondos >= cantidad:
+                    jugador.fondos -= cantidad
+                    jugador.cartera += cantidad
+                    mensaje = rf"{user} has añadido {cantidad} a su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
+                else:
+                    mensaje = rd"{user}, no tiene suficientes fondos para guardar esa cantidad en su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
+
+    await send(update, context, mensaje)
+
+
+
+# Manejador: Sacar dinero de la cartera
+# -------------------------------------
+# Retira una parte de los fondos del jugador y se almacenan en la cartera
+#
+async def retirar_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    global jugada
+
+    user = update.effective_user.first_name
+    message = update.message.text
+    jugador = jugada.getJugador(user)
+    if not jugador:
+        mensaje = rf"Error: El jugador <b>{user}</b> no está jugando."
+    else:
+        comando = message.split(" ")
+        if len(comando) < 2:
+            mensaje = "Debe indicar la cantidad que quiere retirar de la cartera"
+        else:
+            error = False
+            try:
+                cantidad = int(comando[1])
+            except:
+                error = True
+
+            if error:
+                mensaje = "Necesita indicar un número entero\n"
+            else:
+                if jugador.cartera >= cantidad:
+                    jugador.cartera -= cantidad
+                    jugador.fondos += cantidad
+                    mensaje = rf"{user} ha retirado {cantidad} de su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
+                else:
+                    mensaje = rd"{user}, no tiene suficientes fondos para guardar esa cantidad en su cartera. Fondos: {jugador.fondos}, Cartera: {jugador.cartera}"
+
+    await send(update, context, mensaje)
 
 # Manejador: Evaluar Juego - En deshuso
 # -------------------------------------
@@ -1038,6 +1109,10 @@ def main() -> None:
 
     application.add_handler(CommandHandler("jugadores", jugadores_command))
     application.add_handler(CommandHandler("ganancias", ganancias_command))
+
+    application.add_handler(CommandHandler("guardar", guardar_command))
+    application.add_handler(CommandHandler("retirar", retirar_command))
+
 
     application.add_handler(CommandHandler("sirve", serve_command))
     application.add_handler(CommandHandler("servido", served_command))
