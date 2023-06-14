@@ -151,7 +151,6 @@ async def sendPhoto(update, context, filename):
     if len(filename) > 0:
         await context.bot.send_photo(chat_id=chat_id,photo=open(filename,'rb'))
         
-        breakpoint()
         for jugador in jugada.jugadores:
             if jugador.isPrivado():
                 print(rf"sendPhoto - {jugador.getNombre()} es privado")
