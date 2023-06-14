@@ -146,10 +146,20 @@ def comandosEstado():
 # por privado.
 #
 async def sendPhoto(update, context, filename):
+    global jugada
+
     if len(filename) > 0:
         await context.bot.send_photo(chat_id=chat_id,photo=open(filename,'rb'))
-        if update.effective_chat.type == Chat.PRIVATE:
-            await context.bot.send_photo(chat_id=update.effective_chat.id,photo=open(filename,'rb'))
+        
+        breakpoint()
+        for jugador in jugada.jugadores:
+            if jugador.isPrivado():
+                print(rf"sendPhoto - {jugador.getNombre()} es privado")
+                await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(filename,'rb'))
+            else:
+                print(rf"sendPhoto - {jugador.getNombre()} no es privado")
+
+            #await context.bot.send_photo(chat_id=update.effective_chat.id,photo=open(filename,'rb'))
 
         
 # Función de soporte: Enviar Mensaje al Grupo
@@ -158,6 +168,8 @@ async def sendPhoto(update, context, filename):
 # esta función permite suministrar al grupo la información que sea imprescindible.
 #
 async def sendToGroup(nombre, context, mensaje, reply=True):
+    global estado
+
     if reply or estado != RESULTADO:
         str = rf"{nombre}: "+mensaje
     else:
@@ -172,7 +184,20 @@ async def sendToGroup(nombre, context, mensaje, reply=True):
 # envía el mensaje también al grupo.
 #
 async def send(update: Update, context, mensaje, reply=True):
+    global jugada
+
     if update.effective_chat.type == Chat.PRIVATE:
+        try:
+            jugador = jugada.getJugador(update.effective_user.first_name)
+            if not jugador.isPrivado():
+                jugador.setPrivado(True)
+        except:
+            print(rf"Error: send - jugador {update.effective_user.first_name} no encontrado")
+        
+        if estado != ABRIR:
+            for jugador in jugada.jugadores:
+                if jugador.getNombre() != update.effective_user.first_name and jugador.isPrivado():
+                    await context.bot.send_message(chat_id=jugador.getChatId(),text=mensaje,parse_mode=ParseMode.HTML)
         await update.message.reply_html(mensaje)
         await sendToGroup(update.effective_user.first_name, context, mensaje, reply)
     else:
@@ -807,6 +832,8 @@ def evaluar():
         j = jugada.addJugadorByNombre(jugador.getNombre(), jugador.getUsername())
         j.setChatId(jugador.getChatId())
         j.setFondos(jugador.getFondos())
+        j.setPrivado(jugador.getPrivado())
+        j.setCartera(jugdor.getCartera())
     jugada.setCompleto(False)
     jugada.writeJugadores()
 

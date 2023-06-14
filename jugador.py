@@ -16,6 +16,7 @@ class Jugador:
         self.miTurno = False
         self.lastGanado = 0
         self.username = username
+        self.privado = False
 
 
     def getNombre(self):
@@ -26,6 +27,12 @@ class Jugador:
 
     def setUsername(self, username):
         self.username = username
+
+    def isPrivado(self):
+        return self.privado
+
+    def setPrivado(self, privado):
+        self.privado = privado
 
     def getChatId(self):
         return self.chat_id
