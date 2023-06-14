@@ -832,8 +832,8 @@ def evaluar():
         j = jugada.addJugadorByNombre(jugador.getNombre(), jugador.getUsername())
         j.setChatId(jugador.getChatId())
         j.setFondos(jugador.getFondos())
-        j.setPrivado(jugador.getPrivado())
-        j.setCartera(jugdor.getCartera())
+        j.setPrivado(jugador.isPrivado())
+        j.setCartera(jugador.getCartera())
     jugada.setCompleto(False)
     jugada.writeJugadores()
 
