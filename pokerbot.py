@@ -190,10 +190,6 @@ async def send(update: Update, context, mensaje, reply=True):
         except:
             print(rf"Error: send - jugador {update.effective_user.first_name} no encontrado")
         
-        if estado != ABRIR:
-            for jugador in jugada.jugadores:
-                if jugador.getNombre() != update.effective_user.first_name and jugador.isPrivado():
-                    await context.bot.send_message(chat_id=jugador.getChatId(),text=rf"<b>{update.effective_user.first_name}:</b> {mensaje}",parse_mode=ParseMode.HTML)
         await update.message.reply_html(mensaje)
         await sendToGroup(update.effective_user.first_name, context, mensaje, reply)
     else:
@@ -201,6 +197,11 @@ async def send(update: Update, context, mensaje, reply=True):
             await update.message.reply_html(mensaje)
         else:
             await context.bot.send_message(chat_id=update.effective_chat.id, text=mensaje, parse_mode=ParseMode.HTML)
+
+    if jugada is not None:
+        for jugador in jugada.jugadores:
+            if jugador.getNombre() != update.effective_user.first_name and jugador.isPrivado():
+                await context.bot.send_message(chat_id=jugador.getChatId(),text=rf"<b>{update.effective_user.first_name}:</b> {mensaje}",parse_mode=ParseMode.HTML)
 
 
 
