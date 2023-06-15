@@ -443,7 +443,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                             if servido == len(ids):
                                 tusCartas = '  '.join(jugador.getCartasBonitas())
                                 dCartas = jugador.getCartas()
-                                await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
+                                #await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
                                 img_filename = ImageCards.paint(jugador.getChatId(),dCartas)
                                 await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(img_filename,'rb'))
 
