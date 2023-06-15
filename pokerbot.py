@@ -828,11 +828,15 @@ def evaluar():
     #Empezamos con jugada y baraja nueva
     jugada = Jugada()
     for jugador in jugadores:
-        j = jugada.addJugadorByNombre(jugador.getNombre(), jugador.getUsername())
-        j.setChatId(jugador.getChatId())
-        j.setFondos(jugador.getFondos())
-        j.setPrivado(jugador.isPrivado())
-        j.setCartera(jugador.getCartera())
+        jugador.apuesta = 0
+        jugador.cartas = []
+        jugador.servicio = 0
+        jugador.servido = False
+        jugador.novoy = False
+        jugador.pasado = False
+        jugador.miTurno = False
+        jugada.jugadores.append(jugador)
+
     jugada.setCompleto(False)
     jugada.writeJugadores()
 
