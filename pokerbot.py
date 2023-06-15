@@ -388,7 +388,7 @@ async def close_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                     mensaje = "El juego está completo\n"
 
                     turno = jugada.nextTurn()
-                    mensaje += rf"Primera ronda de apuestas. Turno de <b>{turno.getNombre()}</b>"
+                    mensaje += rf"Primera ronda de apuestas. Turno de <b>{turno.getNombre()}</b> - Fondos: {turno.getFondos()} / Cartera: {turno.getCartera()}"
                     jugada.rondaApuestas = 1
                     estado = APUESTAS1
 
@@ -468,7 +468,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         turno = jugada.nextTurn()
 
         mensaje += "\n"
-        mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b>"
+        mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b> - Fondos: {turno.getFondos()}"
         await send(update, context, mensaje)
         estado = APUESTAS2
 
@@ -513,7 +513,7 @@ async def served_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         jugada.nTurno = 0
         turno = jugada.nextTurn()
         mensaje += "\n"
-        mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b>"
+        mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b> - Fondos: {turno.getFondos()}"
         await send(update, context, mensaje)
         estado = APUESTAS2
 
