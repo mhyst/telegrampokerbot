@@ -153,10 +153,7 @@ async def sendPhoto(update, context, filename):
         
         for jugador in jugada.jugadores:
             if jugador.isPrivado():
-                print(rf"sendPhoto - {jugador.getNombre()} es privado")
                 await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(filename,'rb'))
-            else:
-                print(rf"sendPhoto - {jugador.getNombre()} no es privado")
 
             #await context.bot.send_photo(chat_id=update.effective_chat.id,photo=open(filename,'rb'))
 
@@ -170,7 +167,7 @@ async def sendToGroup(nombre, context, mensaje, reply=True):
     global estado
 
     if reply or estado != RESULTADO:
-        str = rf"{nombre}: "+mensaje
+        str = rf"<b>{nombre}:</b> "+mensaje
     else:
         str = mensaje
     await context.bot.send_message(chat_id=chat_id, text=str, parse_mode=ParseMode.HTML)
