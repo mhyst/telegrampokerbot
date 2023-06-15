@@ -417,8 +417,8 @@ class Jugada:
     def mostrar2(self):
         message = "<b><u>Jugadores</u></b>\n\n"
         #message += "---------------------------------------------------------\n"
-        for jugador in self.jugadores:
-            message += jugador.mostrar2()
+        #for jugador in self.jugadores:
+        #    message += jugador.mostrar2()
 
         img_filename = ImageCards.paintJugadores(self.jugadores)
 

@@ -382,7 +382,7 @@ async def close_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                     for jugador in jugada.jugadores:
                         tusCartas = '  '.join(jugador.getCartasBonitas())
                         dCartas = jugador.getCartas()
-                        await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
+                        #await context.bot.send_message(chat_id=jugador.getChatId(), text=tusCartas)
                         img_filename = ImageCards.paint(jugador.getChatId(),dCartas)
                         await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(img_filename,'rb'))
                     mensaje = "El juego está completo\n"
@@ -579,7 +579,7 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                                 else:
                                     mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                                     mensaje += "\n"
-                                    mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
+                                    mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote} - Fondos: {jugador.fondos}"
 
     await send(update, context, mensaje, False)
 
@@ -657,7 +657,7 @@ async def subo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                     else:                    
                                         mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                                         mensaje += "\n"
-                                        mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b> - Bote: {jugada.bote}"
+                                        mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: <b>{str(turno.getApuesta())}</b> - Bote: {jugada.bote} - Fondos: {jugador.fondos}"
                                 else:
                                     mensaje = rf"<b>{user}</b>, no tienes suficientes fondos para cubrir esa apuesta."
 
@@ -724,7 +724,7 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                             else:
                                 mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                                 mensaje += "\n"
-                                mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
+                                mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote} - Fondos: {jugador.fondos}"
 
 
                         else:
@@ -795,7 +795,7 @@ async def novoy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                         else:
                             mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
                             mensaje += "\n"
-                            mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote}"
+                            mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote} - Fondos: {jugador.fondos}"
 
 
     await send(update, context, mensaje, False)
