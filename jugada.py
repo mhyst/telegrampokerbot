@@ -186,7 +186,7 @@ class Jugada:
         else:
             self.jugadores[0].aumentarApuesta(2)
             self.jugadores[1].aumentarApuesta(4)
-            self.lastApuesta = 6
+            self.lastApuesta = 4
             self.bote = 6
             self.idTurno = 2
 
@@ -285,7 +285,10 @@ class Jugada:
         else:
             if not noincrement:
                 self.nTurno += 1
-            turno = jugs[self.getIdTurn()]
+            try:
+                turno = jugs[self.getIdTurn()]
+            except:
+                turno = None
             if turno is None:
                 self.increaseIdTurn(jugs)
                 turno = jugs[self.IdTurn()]
