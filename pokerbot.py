@@ -549,8 +549,11 @@ async def veo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                         mensaje = rf"No es tu turno, sino el de <b>{turno.getNombre()}</b>"
                     else:
                         lastApuesta = jugada.lastApuesta
-                        if lastApuesta == 0 or jugada.nTurno == 1:
+                        print(rf"veo_command: Montante: {lastApuesta} nTurno: {jugada.nTurno}")
+                        #if lastApuesta == 0 or jugada.nTurno == 1:
+                        if lastApuesta == 0 or (jugada.rondaApuestas == 2 and lastApuesta == jugador.getApuesta()):
                             mensaje = "Aún no hay apuesta inicial"
+                            #mensaje = "Debes ver la apuesta o subirla"
                         else:
                             if not jugada.verApuesta(jugador):
                                 mensaje = rf"<b>{user}</b> no tienes suficientes fondos para ver la apuesta"
@@ -729,7 +732,7 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
                         else:
                             mensaje = "No puedes pasar en la segunda ronda de apuestas\n"
-                            mensaje += "<b>{user}</b>Sigue siendo tu turno"
+                            mensaje += rf"<b>{user}</b> Sigue siendo tu turno"
 
     await send(update, context, mensaje, False)
 
