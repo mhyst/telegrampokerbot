@@ -697,33 +697,35 @@ async def paso_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                         mensaje = rf"No es tu turno, sino el de <b>{turno.getNombre()}</b>"
                     else:
                         if jugada.rondaApuestas == 1:
-                            jugador.setPasado(True)
-                            mensaje = rf"<b>{user}</b> ha pasado"
-                            mensaje += "\n"
+                            if jugada.lastApuesta == jugador.getApuesta():
+                                jugador.setPasado(True)
+                                mensaje = rf"<b>{user}</b> ha pasado"
+                                mensaje += "\n"
 
-                            turno = jugada.nextTurn(True)
+                                turno = jugada.nextTurn(True)
 
 
-                            if turno is None:
-                                if jugada.isFinJuego():
-                                    estado = RESULTADO
-                                    img_filename, mensaje = evaluar()
-                                    await sendPhoto(update, context, img_filename)
-                                else:
-                                    mensaje = "las apuestas han concluído"
-                                    mensaje += "\n"
-                                    if jugada.rondaApuestas == 1:
-                                        mensaje += "Se inician los descartes (/sirve /servido)"
-                                        estado = DESCARTES
-                                    elif jugada.rondaApuestas == 2:
+                                if turno is None:
+                                    if jugada.isFinJuego():
                                         estado = RESULTADO
                                         img_filename, mensaje = evaluar()
                                         await sendPhoto(update, context, img_filename)
+                                    else:
+                                        mensaje = "las apuestas han concluído"
+                                        mensaje += "\n"
+                                        if jugada.rondaApuestas == 1:
+                                            mensaje += "Se inician los descartes (/sirve /servido)"
+                                            estado = DESCARTES
+                                        elif jugada.rondaApuestas == 2:
+                                            estado = RESULTADO
+                                            img_filename, mensaje = evaluar()
+                                            await sendPhoto(update, context, img_filename)
+                                else:
+                                    mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
+                                    mensaje += "\n"
+                                    mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote} - Fondos: {jugador.fondos}"
                             else:
-                                mensaje += rf"Ronda {str(jugada.rondaApuestas)}: Turno de apostar de <b>{turno.getNombre()}</b>"
-                                mensaje += "\n"
-                                mensaje += rf"Montante: {str(jugada.lastApuesta)} - Tu apuesta: {str(turno.getApuesta())} - Bote: {jugada.bote} - Fondos: {jugador.fondos}"
-
+                                mensaje = "No puedes pasar\n"
 
                         else:
                             mensaje = "No puedes pasar en la segunda ronda de apuestas\n"
