@@ -420,7 +420,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                 user = update.effective_user.first_name
                 message = update.message.text
                 jugador = jugada.getJugador(user)
-                if not jugador:
+                if not jugador or jugador.isNovoy():
                     mensaje = rf"Error: El jugador <b>{user}</b> no está jugando."
                 else:
                     print(message)
@@ -509,7 +509,7 @@ async def served_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                 user = update.effective_user.first_name
                 message = update.message.text
                 jugador = jugada.getJugador(user)
-                if not jugador:
+                if not jugador or jugador.isNovoy():
                     mensaje = rf"Error: El jugador <b>{user}</b> no está jugando."
                 else:
                     jugador.setServido(True)
