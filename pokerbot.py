@@ -191,7 +191,8 @@ async def send(update: Update, context, mensaje, reply=True, resend=True):
             print(rf"Error: send - jugador {update.effective_user.first_name} no encontrado")
         
         await update.message.reply_html(mensaje)
-        await sendToGroup(update.effective_user.first_name, context, mensaje, reply)
+        if resend:
+            await sendToGroup(update.effective_user.first_name, context, mensaje, reply)
     else:
         if reply:
             await update.message.reply_html(mensaje)
@@ -436,9 +437,15 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                         except:
                             error = True
 
+                        for i in ids:
+                            if i < 1 or i > 5:
+                                error = True
+                                break
+
                         if error:
-                            mensaje = "Debes indicar números enteros del 0 al 4"
+                            mensaje = "Debes indicar números enteros del 1 al 5"
                         else:
+                            ids = [i-1 for i in ids]
                             servido = jugada.servirJugador(jugador,ids)
                             if servido == len(ids):
                                 tusCartas = '  '.join(jugador.getCartasBonitas())
@@ -457,7 +464,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                             else:
                                 mensaje = "No te quedan descartes"
 
-    await send(update, context, mensaje, False)
+    await send(update, context, mensaje, resend=False)
     if jugada.isServida():
 
         jugada.setIdTurn(0)
@@ -468,7 +475,8 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         mensaje += "\n"
         for jugador in jugada.jugadores:
             if not jugador.isNovoy():
-                mensaje += rf"{jugador.getNombre()}: servido ({jugador.getServicio()})\n"
+                mensaje += rf"{jugador.getNombre()}: servido ({jugador.getServicio()})"
+            mensaje += "\n"
         mensaje += "\n"
         mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b> - Fondos: {turno.getFondos()}"
         await send(update, context, mensaje)
@@ -507,7 +515,7 @@ async def served_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                     jugador.setServido(True)
                     mensaje = rf"<b>{user}</b> está servido ({jugador.getServicio()})"
 
-    await send(update, context, mensaje, False)
+    await send(update, context, mensaje, resend=False)
     if jugada.isServida():
         print("DEBUG - served: estan todos servidos")
         jugada.setIdTurn(0)
@@ -517,7 +525,8 @@ async def served_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         mensaje += "\n"
         for jugador in jugada.jugadores:
             if not jugador.isNovoy():
-                mensaje += rf"{jugador.getNombre()}: servido ({jugador.getServicio()})\n"
+                mensaje += rf"{jugador.getNombre()}: servido ({jugador.getServicio()})"
+            mensaje += "\n"
         mensaje += "\n"
         mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b> - Fondos: {turno.getFondos()}"
         await send(update, context, mensaje)
