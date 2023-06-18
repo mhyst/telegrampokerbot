@@ -321,6 +321,9 @@ class Jugada:
         ganadores = []
 
         for index, jugador in enumerate(self.jugadores):
+            if jugador.isNovoy():
+                continue
+
             juego, carta1, carta2 = Jugada.mejorJugada(jugador.getCartas())
 
             #Asignar jugada a cada jugador
