@@ -179,7 +179,7 @@ async def sendToGroup(nombre, context, mensaje, reply=True):
 # Determina si estamos en un chat privado o en un grupo y en caso de ser lo primero
 # envía el mensaje también al grupo.
 #
-async def send(update: Update, context, mensaje, reply=True):
+async def send(update: Update, context, mensaje, reply=True, resend=True):
     global jugada
 
     if update.effective_chat.type == Chat.PRIVATE:
@@ -198,7 +198,7 @@ async def send(update: Update, context, mensaje, reply=True):
         else:
             await context.bot.send_message(chat_id=update.effective_chat.id, text=mensaje, parse_mode=ParseMode.HTML)
 
-    if jugada is not None:
+    if jugada is not None and resend:
         for jugador in jugada.jugadores:
             if jugador.getNombre() != update.effective_user.first_name and jugador.isPrivado():
                 await context.bot.send_message(chat_id=jugador.getChatId(),text=rf"<b>{update.effective_user.first_name}:</b> {mensaje}",parse_mode=ParseMode.HTML)
@@ -449,7 +449,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
                                 if jugador.getServicio() == 5:
                                     mensaje = "Se te ha servido. Vuelve a mirar tus cartas\n"
-                                    mensaje += rf"<b>{user}</b> está servido"
+                                    mensaje += rf"<b>{user}</b> está servido ({jugador.getServicio()})"
                                 else:
                                     mensaje = "Se te ha servido. Vuelve a mirar tus cartas"
                             elif servido > 0:
@@ -457,7 +457,7 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                             else:
                                 mensaje = "No te quedan descartes"
 
-    await send(update, context, mensaje)
+    await send(update, context, mensaje, False)
     if jugada.isServida():
 
         jugada.setIdTurn(0)
@@ -465,6 +465,10 @@ async def serve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         jugada.nTurno = 0
         turno = jugada.nextTurn()
 
+        mensaje += "\n"
+        for jugador in jugada.jugadores:
+            if not jugador.isNovoy():
+                mensaje += rf"{jugador.getNombre()}: servido ({jugador.getServicio()})\n"
         mensaje += "\n"
         mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b> - Fondos: {turno.getFondos()}"
         await send(update, context, mensaje)
@@ -501,15 +505,19 @@ async def served_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                     mensaje = rf"Error: El jugador <b>{user}</b> no está jugando."
                 else:
                     jugador.setServido(True)
-                    mensaje = rf"<b>{user}</b> está servido"
+                    mensaje = rf"<b>{user}</b> está servido ({jugador.getServicio()})"
 
-    await send(update, context, mensaje)
+    await send(update, context, mensaje, False)
     if jugada.isServida():
         print("DEBUG - served: estan todos servidos")
         jugada.setIdTurn(0)
         jugada.rondaApuestas = 2
         jugada.nTurno = 0
         turno = jugada.nextTurn()
+        mensaje += "\n"
+        for jugador in jugada.jugadores:
+            if not jugador.isNovoy():
+                mensaje += rf"{jugador.getNombre()}: servido ({jugador.getServicio()})\n"
         mensaje += "\n"
         mensaje += rf"Ronda 2 de apuestas: turno de <b>{turno.getNombre()}</b> - Fondos: {turno.getFondos()}"
         await send(update, context, mensaje)
