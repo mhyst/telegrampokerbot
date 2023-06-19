@@ -1020,6 +1020,30 @@ async def end_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await send(update, context, "Juego finalizado")
 
 
+# Manejador: Ver mis cartas
+# -------------------------
+# Permite a cualquier jugador recibir otra vez sus cartas, en caso
+# de que la última imagen haya quedado muy arriba.
+#
+async def vercartas_command(update: Update, contect: ContextTypes.DEFAULT_TYPE):
+    global estado, jugada
+
+    if estado != APUESTAS1 and estado != DESCARTES and estado != APUESTAS2:
+        comandos = comandosEstado()
+        await send(update, context, "Ahora no puedes ver tus cartas * "+comandos)
+        return
+
+    user = update.effective_user.first_name
+    message = update.message.text
+    jugador = jugada.getJugador(user)
+    if not jugador:
+        mensaje = rf"Error: El jugador <b>{user}</b> no está jugando."
+    else:
+        dCartas = jugador.getCartas()
+        img_filename = ImageCards.paint(jugador.getChatId(),dCartas)
+        await context.bot.send_photo(chat_id=jugador.getChatId(),photo=open(img_filename,'rb'))
+
+
 # Manejador: Pukit -  En deshuso
 # ------------------------------
 # Había previsto una especie de consola del administrador que se quedó
@@ -1181,6 +1205,7 @@ def main() -> None:
     application.add_handler(CommandHandler("guardar", guardar_command))
     application.add_handler(CommandHandler("retirar", retirar_command))
     application.add_handler(CommandHandler("cartera", cartera_command))
+    application.add_handler(CommandHandler("miscartas", vercartas_command))
 
     application.add_handler(CommandHandler("sirve", serve_command))
     application.add_handler(CommandHandler("servido", served_command))
