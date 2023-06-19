@@ -1025,7 +1025,7 @@ async def end_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Permite a cualquier jugador recibir otra vez sus cartas, en caso
 # de que la última imagen haya quedado muy arriba.
 #
-async def vercartas_command(update: Update, contect: ContextTypes.DEFAULT_TYPE):
+async def vercartas_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global estado, jugada
 
     if estado != APUESTAS1 and estado != DESCARTES and estado != APUESTAS2:
